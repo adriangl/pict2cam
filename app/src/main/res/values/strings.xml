@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Image2Camera</string>
+
+    <string name="help_summary">You do not need to open this app directly,
+    the app is used as a standard camera app but allow you to select an exist image instead.\n\n
+    You should make sure that you can not set other camera app as default, then you can
+    choose the app like below.</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="select_image">Select Image</string>
+    <string name="io_exception_toast">Unfortunately, io exception occurred,
+        maybe this app is not supported now.</string>
+    <string name="not_select_toast">Do not select any image.</string>
+
+    <string name="read_image_progress">Reading image, please wait.</string>
+    
+    <string name="only_work_for_ingress">Only work for Ingress:</string>
+    <string name="default_camera_app">Default camera app</string>
+    <string name="click_to_choose">Click to choose</string>
+
+    <string name="positive_button">@android:string/ok</string>
+    <string name="negative_button">@android:string/cancel</string>
+    <string name="load_app_progress">Loading apps, please wait.</string>
+
+    <string name="dialog_title_app_choose">Choose default camera app</string>
+    <string name="toast_please_set_default_camera_app">Please set default camera app first.</string>
+
+    <string name="permission_write_external_message">The app must have permission to external storage due to the caller use it.</string>
+    <string name="confirm">Confirm</string>
+
+    <string name="not_support_message">This method is not supported now.</string>
+</resources>
