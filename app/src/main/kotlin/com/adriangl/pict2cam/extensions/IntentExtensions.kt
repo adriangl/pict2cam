@@ -1,14 +1,20 @@
-package com.adriangl.image2camera.extensions
+package com.adriangl.pict2cam.extensions
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 
+/**
+ * Check if the intent is an image capture one, so the app can get it.
+ */
 fun Intent.isImageCaptureAction(): Boolean {
     return action == MediaStore.ACTION_IMAGE_CAPTURE
 }
 
+/**
+ * Returns the camera Uri to write to in an API-level agnostic way.
+ */
 fun Intent.getImageCaptureOutputUri(): Uri? {
     if (!isImageCaptureAction()) return null
 

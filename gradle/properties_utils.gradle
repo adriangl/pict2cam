@@ -1,0 +1,73 @@
+/**
+ * Utility method that loads a Properties object from a given file name.
+ *
+ * @param fileName name of the properties file
+ * @return a Properties object, empty if the file could not be loaded
+ */
+def loadPropertiesFile(fileName) {
+    try {
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(rootProject.file(fileName)))
+
+        return properties
+    }
+    catch (ignored) {
+        logger.info("File \"$fileName\" not found, returning empty properties object")
+        return new Properties()
+    }
+}
+
+/**
+ * Utility method that tries to find a variable in the following places:
+ * - System environment variable
+ * - Property in a properties file (the property will try to find the name in camel case)
+ *
+ * System environment property takes precedence over the property in a properties file.
+ *
+ * @param key Key to find in snake case
+ * @param defaultValue Default value in case the key is not found, null by default
+ * @param propertiesFileName file in the root of the project to check for properties. If not defined,
+ *                           it will default to the project's gradle.properties
+ */
+def loadEnvOrProperty(String key, defaultValue = null, String propertiesFileName = "gradle.properties") {
+    def envVarKey = key
+    def propertyKey = toCamelCase(key)
+
+    logger.info("Trying to find environment variable \"$envVarKey\" (or $propertiesFileName property \"$propertyKey\")")
+
+    // First try to get the value from the environment variable
+    def result = System.getenv(envVarKey)
+
+    if (result == null) {
+        logger.info("Environment variable \"$envVarKey\" not found, trying to find it in $propertiesFileName property \"$propertyKey\"")
+
+        // Then try to get it from the properties file
+        def properties = loadPropertiesFile(propertiesFileName)
+
+        if (properties == null) {
+            // If none could be found, return the default value
+            logger.error("Requested file $propertiesFileName not found, returning default value")
+            return defaultValue
+        }
+
+        result = properties[propertyKey]
+    }
+
+    if (result == null) {
+        logger.error("Environment variable \"$envVarKey\" (or $propertiesFileName property \"$propertyKey\") not found, returning default value")
+        return defaultValue
+    }
+    else {
+        return result
+    }
+}
+
+static String toCamelCase(String text, boolean capitalized = false) {
+    def newText = text.toLowerCase().replaceAll("(_)([A-Za-z0-9])", { Object[] it -> it[2].toUpperCase() })
+    return capitalized ? capitalize(newText) : newText
+}
+
+ext {
+    loadPropertiesFile = this.&loadPropertiesFile
+    loadEnvOrProperty = this.&loadEnvOrProperty
+}

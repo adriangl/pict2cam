@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:targetApi="o">
+    <font
+        android:font="@font/opensans_light_normal"
+        android:fontStyle="normal"
+        android:fontWeight="300"
+        app:font="@font/opensans_light_normal"
+        app:fontStyle="normal"
+        app:fontWeight="300" />
+    <font
+        android:font="@font/opensans_light_italic"
+        android:fontStyle="italic"
+        android:fontWeight="300"
+        app:font="@font/opensans_light_italic"
+        app:fontStyle="italic"
+        app:fontWeight="300" />
+    <font
+        android:font="@font/opensans_regular_normal"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        app:font="@font/opensans_regular_normal"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+    <font
+        android:font="@font/opensans_regular_italic"
+        android:fontStyle="italic"
+        android:fontWeight="400"
+        app:font="@font/opensans_regular_italic"
+        app:fontStyle="italic"
+        app:fontWeight="400" />
+    <font
+        android:font="@font/opensans_semibold_normal"
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        app:font="@font/opensans_semibold_normal"
+        app:fontStyle="normal"
+        app:fontWeight="600" />
+    <font
+        android:font="@font/opensans_semibold_italic"
+        android:fontStyle="italic"
+        android:fontWeight="600"
+        app:font="@font/opensans_semibold_italic"
+        app:fontStyle="italic"
+        app:fontWeight="600" />
+    <font
+        android:font="@font/opensans_bold_normal"
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        app:font="@font/opensans_bold_normal"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+    <font
+        android:font="@font/opensans_bold_italic"
+        android:fontStyle="italic"
+        android:fontWeight="700"
+        app:font="@font/opensans_bold_italic"
+        app:fontStyle="italic"
+        app:fontWeight="700" />
+    <font
+        android:font="@font/opensans_extrabold_normal"
+        android:fontStyle="normal"
+        android:fontWeight="800"
+        app:font="@font/opensans_extrabold_normal"
+        app:fontStyle="normal"
+        app:fontWeight="800" />
+    <font
+        android:font="@font/opensans_extrabold_italic"
+        android:fontStyle="italic"
+        android:fontWeight="800"
+        app:font="@font/opensans_extrabold_italic"
+        app:fontStyle="italic"
+        app:fontWeight="800" />
+</font-family>

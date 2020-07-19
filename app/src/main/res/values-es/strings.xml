@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- Onboarding strings -->
+    <string name="onboarding_step_1_title">"¡Bienvenido a Pict2Cam!"</string>
+    <string name="onboarding_step_1_description">"Pict2Cam te permite elegir cualquier imagen de tu dispositivo cuando una aplicación quiera usar tu cámara. ¡Veamos cómo funciona!"</string>
+    <string name="onboarding_step_2_title">"Cómo usar Pict2Cam"</string>
+    <string name="onboarding_step_2_description">"Abre la aplicación que necesita usar una cámara externa y elige Pict2Cam cuando te pida tomar una foto"</string>
+    <string name="onboarding_step_3_title">"Cómo usar Pict2Cam"</string>
+    <string name="onboarding_step_3_description">"Elige tu foto, recórtala… ¡Y listo!"</string>
+    <string name="onboarding_step_4_title">"A tener en cuenta..."</string>
+    <string name="onboarding_step_4_description">"Es posible que la aplicación no funcione en aplicaciones de mensajería, ya que normalmente tienen su propia cámara integrada en la aplicación"</string>
+    <string name="onboarding_step_5_title">"Agradecimientos"</string>
+    <string name="onboarding_step_5_description">"Esta aplicación no sería posible sin las siguientes utilidades:"</string>
+    <!-- Image picker library -->
+    <string name="image_picker_invalid_uri_error">"La aplicación no ha proporcionado un archivo en el que escribir"</string>
+    <string name="image_picker_invalid_intent_error">"La aplicación no ha proporcionado los parámetros adecuados"</string>
+    <string name="image_picker_chooser_title">"Elige una aplicación para seleccionar fotos"</string>
+    <string name="image_picker_write_external_rationale_message">"Confirma que permites que la aplicación puede escribir en almacenamiento externo. Este permiso es necesario para que la aplicación funcione correctamente"</string>
+    <string name="image_picker_write_external_rationale_action_allow">"Permitir"</string>
+</resources>

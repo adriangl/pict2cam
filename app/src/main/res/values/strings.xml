@@ -1,32 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="app_name">Image2Camera</string>
+    <!-- Onboarding strings -->
+    <string name="onboarding_step_1_title">"Welcome to Pict2Cam!"</string>
+    <string name="onboarding_step_1_description">"Pict2Cam allows you to pick any image from your device whenever an application wants to use your camera. Let's check how it works!"</string>
+    <string name="onboarding_step_2_title">"How to use Pict2Cam"</string>
+    <string name="onboarding_step_2_description">"Open the app that requires you to use an external camera and select Pict2Cam when the prompt to take a picture appears"</string>
+    <string name="onboarding_step_3_title">"How to use Pict2Cam"</string>
+    <string name="onboarding_step_3_description">"Choose your photo, crop it… And you're done!"</string>
+    <string name="onboarding_step_4_title">"Things to note"</string>
+    <string name="onboarding_step_4_description">"This app may not work in messaging apps, as they usually bundle their custom cameras within them"</string>
+    <string name="onboarding_step_5_title">"Credits"</string>
+    <string name="onboarding_step_5_description">"This app would not be possible without the following resources:"</string>
+    <!-- Image picker library -->
+    <string name="image_picker_invalid_uri_error">"The app did not provide a file to write to"</string>
+    <string name="image_picker_invalid_intent_error">"The app did not provide proper parameters"</string>
+    <string name="image_picker_chooser_title">"Select an app to pick images"</string>
+    <string name="image_picker_write_external_rationale_message">"Confirm that you allow the app to write to external storage. This permission is needed for the app to work properly"</string>
+    <string name="image_picker_write_external_rationale_action_allow">"Allow"</string>
 
-    <string name="help_summary">You do not need to open this app directly,
-    the app is used as a standard camera app but allow you to select an exist image instead.\n\n
-    You should make sure that you can not set other camera app as default, then you can
-    choose the app like below.</string>
-    <string name="action_settings">Settings</string>
-
-    <string name="select_image">Select Image</string>
-    <string name="io_exception_toast">Unfortunately, io exception occurred,
-        maybe this app is not supported now.</string>
-    <string name="not_select_toast">Do not select any image.</string>
-
-    <string name="read_image_progress">Reading image, please wait.</string>
-    
-    <string name="only_work_for_ingress">Only work for Ingress:</string>
-    <string name="default_camera_app">Default camera app</string>
-    <string name="click_to_choose">Click to choose</string>
-
-    <string name="positive_button">@android:string/ok</string>
-    <string name="negative_button">@android:string/cancel</string>
-    <string name="load_app_progress">Loading apps, please wait.</string>
-
-    <string name="dialog_title_app_choose">Choose default camera app</string>
-    <string name="toast_please_set_default_camera_app">Please set default camera app first.</string>
-
-    <string name="permission_write_external_message">The app must have permission to external storage due to the caller use it.</string>
-    <string name="confirm">Confirm</string>
-
-    <string name="not_support_message">This method is not supported now.</string>
 </resources>

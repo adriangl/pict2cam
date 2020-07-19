@@ -1,5 +1,7 @@
-# image-to-camera
-An android "fake" camera app to select an image
+# pict2cam
+An android "fake" camera app that you can use to pick images from your device and feed them
+to a camera request. It also includes a cropper to ease image editing.
 
-The app offers a standard camera interface to deal with the capture photo intent, 
-but allows you to choose an existing image file instead.
+## Translations
+- Set-up PoEditor plugin
+- Add translations to project

@@ -19,4 +19,29 @@
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
+    <style name="AppTheme.CreditsHeadingText" parent="TextAppearance.AppCompat.Display1">
+        <item name="android:textColor">@color/appintro_title_color</item>
+        <item name="android:textSize">@dimen/appintro_headtext_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/appintro_head_padding</item>
+        <item name="android:gravity">bottom|center_horizontal</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
+    </style>
+
+    <style name="AppTheme.CreditsDescriptionText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/appintro_desc_color</item>
+        <item name="android:textSize">@dimen/appintro_desctext_size</item>
+        <item name="android:padding">@dimen/appintro_desc_padding</item>
+        <item name="android:fontFamily">@font/opensans</item>
+        <item name="fontFamily">@font/opensans</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="AppTheme.CardsDescriptionText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/appintro_desctext_size</item>
+        <item name="android:fontFamily">@font/opensans</item>
+        <item name="fontFamily">@font/opensans</item>
+    </style>
+
 </resources>

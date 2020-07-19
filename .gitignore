@@ -202,3 +202,6 @@ gradle-app.setting
 .idea/sonarlint/
 
 \.idea/render\.experimental\.xml
+
+#PoEditor
+poeditor.properties

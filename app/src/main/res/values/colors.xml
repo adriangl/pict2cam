@@ -8,4 +8,10 @@
     <color name="secondaryDarkColor">#000051</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
+
+    <!-- Welcome screens -->
+    <color name="welcome_step_1_background_color">#7986CB</color>
+    <color name="welcome_step_2_background_color">#4FC3F7</color>
+    <color name="welcome_step_3_background_color">#4DD0E1</color>
+    <color name="welcome_step_4_background_color">#4DB6AC</color>
 </resources>
