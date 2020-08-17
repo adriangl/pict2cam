@@ -5,3 +5,6 @@ to a camera request. It also includes a cropper to ease image editing.
 ## Translations
 - Set-up PoEditor plugin
 - Add translations to project
+
+## Attributions
+- FreeVector
