@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    types: ['opened']
+    
+name: Assign Pull Requests' Author
+
+jobs:
+  pr-assign-author:
+    name: Assign author to PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign author to PR
+        uses: technote-space/assign-author@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

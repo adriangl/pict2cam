@@ -26,6 +26,7 @@ apply plugin: "com.gladed.androidgitversion"
 apply plugin: "com.bq.poeditor"
 
 apply from: "$rootDir/gradle/properties_utils.gradle"
+apply from: "$rootDir/gradle/publishing.gradle"
 
 androidGitVersion {
     codeFormat "MNNPP"
@@ -71,6 +72,13 @@ android {
         targetSdkVersion target_sdk_version
         versionCode version_code
         versionName version_name
+
+        // Change the base name of the generated APK to match the project name and include the
+        //  binary version
+        project.archivesBaseName = "${rootProject.name}-${version_name}"
+
+        // Only bundle verified translations
+        resConfigs("en", "es")
     }
 
     // New system introduced in AGP 4.0.0 to specify features that your build needs (or doesn't need) and improve build
@@ -96,17 +104,49 @@ android {
     }
 
     signingConfigs {
+        /*
+         * Debug signing configuration
+         *
+         * Used to ensure that all developers use the same debug keystore
+         */
+        debug {
+            storeFile file("$rootDir/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+
+        /*
+         * Local release signing configuration
+         *
+         * Use this if you need to assemble a release version but you don"t have the proper release keys
+         */
+        localRelease {
+            storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+
+        /*
+         * Release signing configurations
+         *
+         * Use them in CI environments or manual signing.
+         * Requires configuration via signing.properties file or injected via environment variables.
+         * The loadEnvOrProperty will try to find the environment variable (in snake_case) or the
+         * property in signing.properties (converted to camelCase)
+         */
         release {
-            storeFile file("./bla.jks")
-            storePassword "bla"
-            keyAlias "bla"
-            keyPassword "bla"
+            storeFile file(loadEnvOrProperty("RELEASE_KEYSTORE_PATH", "/", "signing.properties"))
+            storePassword loadEnvOrProperty("RELEASE_KEYSTORE_PWD", "", "signing.properties")
+            keyAlias loadEnvOrProperty("RELEASE_KEYSTORE_ALIAS", "", "signing.properties")
+            keyPassword loadEnvOrProperty("RELEASE_KEYSTORE_ALIAS_PWD", "", "signing.properties")
         }
     }
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
         }

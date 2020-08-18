@@ -18,12 +18,6 @@ out/
 .gradle/
 build/
 
-# Local configuration file (sdk path, etc)
-local.properties
-settings.properties
-publishing.properties
-signing.properties
-
 # Log Files
 *.log
 
@@ -203,5 +197,9 @@ gradle-app.setting
 
 \.idea/render\.experimental\.xml
 
-#PoEditor
+# Local configuration file (sdk path, etc)
+local.properties
+settings.properties
+publishing.properties
+signing.properties
 poeditor.properties

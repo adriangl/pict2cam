@@ -18,9 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - No security issues fixed!
 
-## [0.0.1] - 2019-09-12
+## [0.1.0] - 2019-09-12
 ### Added
 - Initial commit.
 
-[Unreleased]: https://github.com/adriangl/pict2cam/compare/0.0.1...HEAD
-[0.0.1]: https://github.com/adriangl/pict2cam/releases/tag/0.0.1
+[Unreleased]: https://github.com/adriangl/pict2cam/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/adriangl/pict2cam/releases/tag/0.1.0

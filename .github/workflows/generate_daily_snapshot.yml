@@ -1,0 +1,79 @@
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '00 0 * * *'
+
+name: Generate daily snapshot
+
+jobs:
+  generate-rc:
+    name: Generate daily snapshot from develop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set-up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Checkout develop
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          fetch-depth: 0 # Whole repo history
+      - name: Fetch tags
+        run: git fetch origin +refs/tags/*:refs/tags/*
+      - name: Verify if no version has been generated from this commit
+        run: |
+          # --exact-match is needed in case the current commit is not tagged
+          if [ ! -z $(git describe --abbrev=0 --tags --exact-match HEAD 2> /dev/null) ]; then
+            echo "The commit already has a tag, exiting..."
+            exit -1
+          fi
+      - name: Dump keystore from secret
+        id: dump_keystore
+        env:
+          RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+        run: |
+          echo $RELEASE_KEYSTORE | base64 -d > keystore.jks
+          RELEASE_KEYSTORE_PATH=$(pwd)/keystore.jks
+          echo ::set-output name=release_keystore_path::"${RELEASE_KEYSTORE_PATH}" # saved as output of the step
+      - name: Dump Google Play service account from secret
+        id: dump_gpp_service_account
+        env:
+          GPP_SERVICE_ACCOUNT: ${{ secrets.GPP_SERVICE_ACCOUNT }}
+        run: |
+          echo $GPP_SERVICE_ACCOUNT | base64 -d > gpp-service-account.json
+          GPP_SERVICE_ACCOUNT_PATH=$(pwd)/gpp-service-account.json
+          echo ::set-output name=gpp_service_account_path::"${GPP_SERVICE_ACCOUNT_PATH}" # saved as output of the step
+      - name: Run detekt
+        run: |
+          ./gradlew detekt
+      - name: Generate release candidate and publish it
+        id: generate_artifacts
+        env:
+          MODULE: app
+          FLAVOR: ""
+          RELEASE_TRACK: alpha
+          RELEASE_KEYSTORE_PATH: ${{ steps.dump_keystore.outputs.release_keystore_path }}
+          RELEASE_KEYSTORE_PWD: ${{ secrets.RELEASE_KEYSTORE_PWD }}
+          RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
+          RELEASE_KEYSTORE_ALIAS_PWD: ${{ secrets.RELEASE_KEYSTORE_ALIAS_PWD }}
+          GPP_SERVICE_ACCOUNT_PATH: ${{ steps.dump_gpp_service_account.outputs.gpp_service_account_path }}
+        run: |
+          ./scripts/ci/deploy/generate_build.sh "$MODULE" "$FLAVOR" "$RELEASE_TRACK"
+
+          ARTIFACTS_TAG=$(git describe --abbrev=0 --tags)
+          echo ::set-output name=artifacts_tag::"${ARTIFACTS_TAG}" # saved as output of the step
+      - name: Store build artifacts into workspace
+        uses: actions/upload-artifact@v1
+        with:
+          name: release
+          path: release/
+      - name: Create a pre-release in Github
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          bodyFile: "release/release-notes.txt"
+          artifacts:
+            "release/artifacts/*"
+          prerelease: true
+          tag: ${{ steps.generate_artifacts.outputs.artifacts_tag }}

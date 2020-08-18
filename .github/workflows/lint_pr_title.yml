@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    types: ['opened', 'edited', 'reopened', 'synchronize']
+    
+name: Lint Pull Requests
+
+jobs:
+  pr-lint:
+    name: Lint PR title
+    runs-on: ubuntu-latest
+    steps:
+      - uses: seferov/pr-lint-action@master
+        with:
+          title-regex: '^\(\#\d+\)( \(\#\d+\))* .+'
+          title-regex-flags: 'gm' # optional
