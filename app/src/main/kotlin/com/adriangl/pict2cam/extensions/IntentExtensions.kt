@@ -24,9 +24,7 @@ import android.provider.MediaStore
 /**
  * Check if the intent is an image capture one, so the app can get it.
  */
-fun Intent.isImageCaptureAction(): Boolean {
-    return action == MediaStore.ACTION_IMAGE_CAPTURE
-}
+fun Intent.isImageCaptureAction(): Boolean = action == MediaStore.ACTION_IMAGE_CAPTURE
 
 /**
  * Returns the camera Uri to write to in an API-level agnostic way.

@@ -20,6 +20,8 @@ apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
 apply plugin: "kotlin-android-extensions"
 
+apply plugin: "io.gitlab.arturbosch.detekt"
+
 apply plugin: "com.gladed.androidgitversion"
 apply plugin: "com.bq.poeditor"
 
@@ -149,4 +151,14 @@ dependencies {
     implementation "com.theartofdev.edmodo:android-image-cropper:2.8.0"
     implementation "com.github.AppIntro:AppIntro:6.0.0"
 
+    // Detekt formatting plugin
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${detekt_version}")
+}
+
+afterEvaluate {
+    detekt {
+        toolVersion = detekt_version
+        input = files(android.sourceSets.collect { it.java.srcDirs.collect { it.path } }.flatten())
+        config = files("${project.rootDir}/config/detekt/detekt.yml")
+    }
 }

@@ -17,16 +17,23 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = "1.4.0"
+    ext {
+        kotlin_version = "1.4.0"
+        detekt_version = "1.9.1"
+    }
+
     repositories {
         google()
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://jitpack.io" }
     }
+    
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
+        classpath "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
         classpath "com.gladed.androidgitversion:gradle-android-git-version:0.4.13"
         classpath "com.github.ben-manes:gradle-versions-plugin:0.28.0"
         classpath "com.github.bq:poeditor-android-gradle-plugin:1.1.0"
@@ -43,3 +50,19 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 }
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+task installGitHooks(type: Copy) {
+    def baseHooksDir = new File(new File(rootProject.rootDir, "scripts"), "hooks")
+    from new File(baseHooksDir, "pre-commit"), new File(baseHooksDir, "commit-msg")
+    into new File(rootProject.rootDir, ".git/hooks")
+    fileMode 0755
+}
+
+// Install hooks automatically before cleaning or building a new compilation
+// Idea from: https://gist.github.com/KenVanHoeylandt/c7a928426bce83ffab400ab1fd99054a
+clean.dependsOn(installGitHooks)
+tasks.getByPath(":app:preBuild").dependsOn(installGitHooks)

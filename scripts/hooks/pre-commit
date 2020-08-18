@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Misc variables
+BOLD=$(tput bold)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+NO_STYLE=$(tput sgr0)
+
+# Run detekt over our files
+echo "${BOLD}Running detekt${NO_STYLE}"
+
+# Stash any unstaged changes, based on https://gist.github.com/KenVanHoeylandt/c7a928426bce83ffab400ab1fd99054a
+# and https://stackoverflow.com/questions/13780700/how-can-i-run-git-pre-commit-checks-only-on-staged-content
+git diff --full-index --binary --no-color > /tmp/stash.tmp
+git stash -q --keep-index
+
+# Verify that detekt succeeded running on the latest staged files
+RESULT=0
+if GIT_WORK_TREE=".." ./gradlew detekt --daemon; then # Fix for Ubuntu suggested in https://github.com/gladed/gradle-android-git-version/issues/36
+  echo "${GREEN}Your code is properly formatted!${NO_STYLE}"
+else
+  echo "${RED}Your files don't pass detekt, aborting commit...${NO_STYLE}"
+  RESULT=1
+fi
+
+# Re-apply stashed changes and remove data
+if [ -s /tmp/stash.tmp ]; then # Only apply if the patch file has data
+  git apply --whitespace=nowarn < /tmp/stash.tmp
+fi
+git stash drop -q
+rm /tmp/stash.tmp
+
+# Propagate result
+[ $RESULT -ne 0 ] && exit 1
+exit 0

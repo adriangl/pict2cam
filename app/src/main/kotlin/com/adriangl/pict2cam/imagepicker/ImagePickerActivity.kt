@@ -61,7 +61,7 @@ class ImagePickerActivity : AppCompatActivity() {
         // the limits of the screen.
         // Check: http://stackoverflow.com/a/29311321
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         setupImagePicker()
     }
@@ -133,26 +133,25 @@ class ImagePickerActivity : AppCompatActivity() {
 
         if (!isWriteExternalPermissionGranted()) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
+                            this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 AlertDialog.Builder(this)
-                    .setMessage(R.string.image_picker_write_external_rationale_message)
-                    .setPositiveButton(
-                        R.string.image_picker_write_external_rationale_action_allow) { _, _ ->
-                        ActivityCompat.requestPermissions(
-                            this@ImagePickerActivity,
-                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
-                        )
-                    }
-                    .show()
+                        .setMessage(R.string.image_picker_write_external_rationale_message)
+                        .setPositiveButton(
+                                R.string.image_picker_write_external_rationale_action_allow) { _, _ ->
+                            ActivityCompat.requestPermissions(
+                                    this@ImagePickerActivity,
+                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                    WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
+                            )
+                        }
+                        .show()
 
                 return false
             } else {
                 ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
+                        this,
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
                 )
 
                 return false
@@ -169,21 +168,21 @@ class ImagePickerActivity : AppCompatActivity() {
         }
 
         startActivityForResult(
-            Intent.createChooser(intent, getString(R.string.image_picker_chooser_title)),
-            PICK_IMAGE_REQUEST_CODE)
+                Intent.createChooser(intent, getString(R.string.image_picker_chooser_title)),
+                PICK_IMAGE_REQUEST_CODE)
     }
 
     private fun openImageCropper(imageUri: Uri, outputUri: Uri) {
         CropImage.activity(imageUri)
-            // Image quality
-            .setOutputCompressFormat(ImageConstants.DEFAULT_COMPRESS_FORMAT)
-            .setOutputCompressQuality(ImageConstants.DEFAULT_IMAGE_QUALITY)
-            .setOutputUri(outputUri)
-            .start(this)
+                // Image quality
+                .setOutputCompressFormat(ImageConstants.DEFAULT_COMPRESS_FORMAT)
+                .setOutputCompressQuality(ImageConstants.DEFAULT_IMAGE_QUALITY)
+                .setOutputUri(outputUri)
+                .start(this)
     }
 
     private fun isWriteExternalPermissionGranted() =
-        ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
 }

@@ -51,6 +51,7 @@ The steps are pretty simple:
 
 ### Kotlin style guide
 * A project style for IntelliJ/Android Studio users is embedded in the project, so ensure that the code you develop follows it.
+* Install the git hooks that the project provides via `./gradlew installGitHooks` so message and code hooks can be run.
 * Detekt will be run whenever you push changes to the repository. That way you don't need to remember to constantly check it whenever you change stuff in the code!
 * No hungarian notation!
 

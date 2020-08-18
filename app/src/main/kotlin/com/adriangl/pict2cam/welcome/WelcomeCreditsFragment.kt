@@ -33,6 +33,9 @@ import com.adriangl.pict2cam.databinding.WelcomeCreditsFragmentBinding
 class WelcomeCreditsFragment : Fragment() {
 
     companion object {
+        /**
+         * Creates a new [WelcomeCreditsFragment] instance.
+         */
         fun newInstance(): WelcomeCreditsFragment = WelcomeCreditsFragment()
     }
 
@@ -40,7 +43,7 @@ class WelcomeCreditsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? =
-        WelcomeCreditsFragmentBinding.inflate(inflater).also { binding = it }.root
+            WelcomeCreditsFragmentBinding.inflate(inflater).also { binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
