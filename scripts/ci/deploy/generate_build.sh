@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh -e
 ##########################
 # Usage:
 # ./generate_build.sh module flavor release_track
