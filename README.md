@@ -1,19 +1,32 @@
 # Pict2Cam
-Pict2Cam is an Android fake camera application used to feed camera intents with files in your device's storage.
+![Latest release](https://img.shields.io/github/v/release/adriangl/pict2cam)
+## What is this?
+Pict2Cam is an Android fake camera app written in Kotlin that you can use to pick images from your device and feed them to an external camera request.
 This means that you can provide any image in your device to apps that require you to take photos from a camera app.
 
-The app also comes bundled with an image resizer so you can process the image before passing it to the
-original app that requested the camera image.
+<img src="https://raw.githubusercontent.com/adriangl/pict2cam/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/1.png" width="400px"/>        
+<img src="https://raw.githubusercontent.com/adriangl/pict2cam/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/4.png" width="400px"/>        
 
-## Translations
-- Set-up PoEditor plugin
-- Add translations to project
+## Requirements
+* An Android device, obviously ;)
+* Android 5.0+
+
+## Features
+The app provides the following features:
+
+* Pick any image from your device when apps want to use a camera app
+* Crop picked images before feeding them to the app that requires a camera app
+
+## Downloads
+You can get it from [Google Play][google-play-link] or grab the latest stable or bleeding edge release from the [Releases][releases-page] page.
+
+<a href="https://play.google.com/store/apps/details?id=com.adriangl.pict2cam"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" width="250px"></a>
 
 ## Contributing
 Refer to the [contributing guide](CONTRIBUTING.md) if you want to contribute to the project!
 
 ## Attributions
-- FreeVector
+- Some of the vector assets in the project are modified versions of vectors that you can find in the [FreeVector website](https://www.freevector.com). Make sure to check them out!
 
 ## License
 ```
@@ -31,3 +44,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+[google-play-link]:https://play.google.com/store/apps/details?id=com.adriangl.pict2cam
+[releases-page]:https://github.com/adriangl/pict2cam/releases
