@@ -47,6 +47,9 @@ jobs:
       - name: Cancel job if no version needs to be generated
         if: ${{ steps.verify_generate_version.outputs.generate_version == 0 }}
         uses: andymckay/cancel-action@0.2
+      - name: Run detekt
+        run: |
+          ./gradlew detekt
       - name: Dump keystore from secret
         id: dump_keystore
         env:
@@ -63,9 +66,6 @@ jobs:
           echo $GPP_SERVICE_ACCOUNT | base64 -d > gpp-service-account.json
           GPP_SERVICE_ACCOUNT_PATH=$(pwd)/gpp-service-account.json
           echo ::set-output name=gpp_service_account_path::"${GPP_SERVICE_ACCOUNT_PATH}" # saved as output of the step
-      - name: Run detekt
-        run: |
-          ./gradlew detekt
       - name: Generate release candidate and publish it
         id: generate_artifacts
         env:
