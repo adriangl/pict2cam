@@ -4,12 +4,18 @@
 # ./generate_build.sh module flavor release_track
 ##########################
 
-# Misc variables
-BOLD=$(tput bold)
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-NO_STYLE=$(tput sgr0)
+# Misc variables, only set them in interactive shells
+# https://unix.stackexchange.com/a/26827
+case $- in
+  *i*)
+    BOLD=$(tput bold)
+    RED=$(tput setaf 1)
+    GREEN=$(tput setaf 2)
+    YELLOW=$(tput setaf 3)
+    NO_STYLE=$(tput sgr0)
+  ;;
+  *) ;;
+esac
 
 # Input parameters (will extract them as script parameters)
 MODULE=$1
