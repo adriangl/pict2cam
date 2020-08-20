@@ -45,6 +45,6 @@ FLAVOR_FOLDER=$(if [ -z "$BUILD_FLAVOR" ]; then echo ""; else echo "${BUILD_FLAV
 
 mkdir -p release/artifacts
 cp "${MODULE}"/build/outputs/apk/"${FLAVOR_FOLDER}"release/*-release.apk release/artifacts/
-# Uncomment if the build is obfuscated
+# Comment if the build is not obfuscated
 # cp "${MODULE}"/build/outputs/mapping/"${FLAVOR_FOLDER}"release/*-release-mapping.txt release/artifacts/
 cp "${MODULE}"/src/"${FLAVOR_FOLDER}"release/play/release-notes/*/"${RELEASE_TRACK}".txt release/release-notes.txt
