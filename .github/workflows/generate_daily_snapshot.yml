@@ -59,12 +59,12 @@ jobs:
       - name: Run detekt
         run: |
           ./gradlew detekt
-      - name: Generate release candidate and publish it
+      - name: Generate daily snapshot and publish it
         id: generate_artifacts
         env:
           MODULE: app
           FLAVOR: ""
-          RELEASE_TRACK: alpha
+          RELEASE_TRACK: internal
           RELEASE_KEYSTORE_PATH: ${{ steps.dump_keystore.outputs.release_keystore_path }}
           RELEASE_KEYSTORE_PWD: ${{ secrets.RELEASE_KEYSTORE_PWD }}
           RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
