@@ -26,13 +26,6 @@ jobs:
       - name: Fetch tags
         run: git fetch origin +refs/tags/*:refs/tags/*
       - name: Verify if no version has been generated from this commit
-        run: |
-          # --exact-match is needed in case the current commit is not tagged
-          if [ ! -z $(git describe --abbrev=0 --tags --exact-match HEAD 2> /dev/null) ]; then
-            echo "The commit already has a tag, exiting..."
-            exit -1
-          fi
-      - name: Verify if no version has been generated from this commit
         id: verify_generate_version
         run: |
           # --exact-match is needed in case the current commit is not tagged
