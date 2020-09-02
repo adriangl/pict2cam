@@ -40,6 +40,15 @@ jobs:
       - name: Cancel job if no version needs to be generated
         if: ${{ steps.verify_generate_version.outputs.generate_version == 0 }}
         uses: andymckay/cancel-action@0.2
+      - name: Restore caches
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Run detekt
         run: |
           ./gradlew detekt
