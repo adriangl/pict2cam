@@ -9,7 +9,9 @@ jobs:
     name: Lint PR title
     runs-on: ubuntu-latest
     steps:
-      - uses: seferov/pr-lint-action@master
+      - uses: morrisoncole/pr-lint-action@v1.2.2
         with:
           title-regex: '^\(\#\d+\)( \(\#\d+\))* .+'
-          title-regex-flags: 'gm' # optional
+          on-failed-regex-comment:
+            ":warning: @${{ github.actor }} **Are you sure you want to leave the PR title with no issue code?**"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
