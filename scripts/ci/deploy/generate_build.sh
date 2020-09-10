@@ -53,7 +53,7 @@ FLAVOR_APK_FOLDER=$(if [ -z "$FLAVOR" ]; then echo "release"; else echo "${FLAVO
 
 mkdir -p release/artifacts
 cp "${MODULE}"/build/outputs/apk/"${FLAVOR_APK_FOLDER}"/*-release.apk release/artifacts/
-cp "${MODULE}"/src/"${FLAVOR_APK_FOLDER}"release/play/release-notes/*/"${RELEASE_TRACK}".txt release/release-notes.txt
+cp "${MODULE}"/src/"${FLAVOR_APK_FOLDER}"/play/release-notes/*/"${RELEASE_TRACK}".txt release/release-notes.txt
 # Comment if the build is not obfuscated
 #FLAVOR_MAPPING_FOLDER=$(if [ -z "$FLAVOR" ]; then echo "release"; else echo "${FLAVOR}Release"; fi)
 #cp "${MODULE}"/build/outputs/mapping/"${FLAVOR_MAPPING_FOLDER}"/*-release-mapping.txt release/artifacts/
