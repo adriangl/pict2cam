@@ -22,9 +22,6 @@
  */
 apply plugin: 'com.github.triplet.play'
 
-// Default publishing language in case that play-gradle-publisher Google Play folders haven't been exported yet.
-def defaultPublishingLanguage = "es-ES"
-
 /* Generic publishing information: we'll use the publish tasks to:
  * - Deploy to variable-configured track; if not configured defaults to internal tests track
  * - Release in "completed" status (so, automatically published) This is needed due to a bug in the Publishing API that does
@@ -37,87 +34,4 @@ play {
     serviceAccountCredentials = serviceAccountCredentialsFile
     track = loadEnvOrProperty("RELEASE_TRACK", "internal", "publishing.properties")
     releaseStatus = "completed"
-}
-
-/**
- * Misc and useful tasks and functions related to publishing
- */
-
-afterEvaluate {
-    generateGitCommitMessageTasks(defaultPublishingLanguage)
-}
-
-private void generateGitCommitMessageTasks(defaultPublishingLanguage) {
-    def configNames = []
-    android.applicationVariants.all { variant ->
-        if (variant.buildType.name != "debug") configNames << variant.name
-    }
-
-    android.productFlavors.all { flavor ->
-        configNames << flavor.name
-    }
-
-    android.buildTypes.all { buildType ->
-        if (buildType.name != "debug") configNames << buildType.name
-    }
-
-    configNames.forEach { name ->
-        // Try to get default publishing language from exported Google Play files; if they're not present, we'll use the default language
-        // declared at the start of this gradle file
-        def defaultLanguageFile = file("$rootDir/app/src/$name/play/default-language.txt")
-        def defaultLanguage = defaultLanguageFile.exists() ? defaultLanguageFile.text.trim() : defaultPublishingLanguage
-
-        generateCopyGitChangelogToReleaseNotesTasks(defaultLanguage, name)
-    }
-}
-
-private generateCopyGitChangelogToReleaseNotesTasks(String defaultLanguage, String name) {
-    def tracks = ["internal", "alpha", "beta", "production"]
-    def maxChangelogSize = 500 // char limit
-    def ellipsisText = "...\r\n\r\n(And more)"
-
-    tracks.forEach { track ->
-        def taskName = "copyGitChangelogTo${name.capitalize()}${track.capitalize()}ReleaseNotes"
-        if (tasks.findByName(taskName) == null) {
-            tasks.register(taskName) {
-                description = "Copies git commit messages from latest tag to HEAD for $name in $track track for the default language"
-                group = "publishing"
-
-                doLast {
-                    def releaseNotesFile = file("$rootDir/app/src/$name/play/release-notes/${defaultLanguage}/${track}.txt")
-                    releaseNotesFile.parentFile.mkdirs()
-                    def commitTexts = getCommitTextsFromLatestTag()?.trim()
-                    def changelog = commitTexts ? commitTexts : "No changes found"
-                    println("Version changelog:")
-                    println("------------------------------------")
-                    println(changelog)
-
-                    def textToWrite
-                    // Needed since descriptions are 500 chars max
-                    if (changelog.length() > maxChangelogSize) {
-                        textToWrite = changelog.take(maxChangelogSize - ellipsisText.length) + ellipsisText
-                    } else {
-                        textToWrite = changelog
-                    }
-                    releaseNotesFile.text = textToWrite
-                }
-            }
-        }
-    }
-}
-
-private String getLatestGitTag() {
-    return 'git describe --abbrev=0 --tags'.execute([], projectDir).text.trim()
-}
-
-private String getCommitTextsFromLatestTag() {
-    def latestTag = getLatestGitTag()
-
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        workingDir rootDir
-        commandLine "git", "log", "$latestTag..HEAD", "--oneline"
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
 }

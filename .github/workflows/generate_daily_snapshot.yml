@@ -10,6 +10,18 @@ jobs:
     name: Generate daily snapshot from develop
     runs-on: ubuntu-latest
     steps:
+      - name: Prepare environment variables
+        run: |
+          # Change the variables here to the needed repos and branches
+          export MODULE=app
+          export FLAVOR=""
+          export RELEASE_TRACK=internal
+          export DEFAULT_PUBLISHING_LANGUAGE=es-ES
+
+          echo "::set-env name=MODULE::$MODULE"
+          echo "::set-env name=FLAVOR::$FLAVOR"
+          echo "::set-env name=RELEASE_TRACK::$RELEASE_TRACK"
+          echo "::set-env name=DEFAULT_PUBLISHING_LANGUAGE::$DEFAULT_PUBLISHING_LANGUAGE"
       - name: Cancel previous runs
         uses: styfle/cancel-workflow-action@0.4.1
         with:
@@ -68,12 +80,24 @@ jobs:
           echo $GPP_SERVICE_ACCOUNT | base64 -d > gpp-service-account.json
           GPP_SERVICE_ACCOUNT_PATH=$(pwd)/gpp-service-account.json
           echo ::set-output name=gpp_service_account_path::"${GPP_SERVICE_ACCOUNT_PATH}" # saved as output of the step
+      - name: Prepare release notes
+        run: |
+          # For GitHub release
+          ./scripts/ci/deploy/generate_release_notes.sh release/release-notes.txt
+          # For Google Play release (don't forget to configure the Google Play Publisher plugin for this)
+          FLAVOR_APK_FOLDER=$(if [ -z "$FLAVOR" ]; then echo "release"; else echo "${FLAVOR}/release"; fi)
+          PUBLISHING_LANGUAGE=$(if cat "${MODULE}"/src/"${FLAVOR_APK_FOLDER}"/play/default-language.txt ; then echo "OK" ; else echo "${DEFAULT_PUBLISHING_LANGUAGE}" ; fi)
+          ./scripts/ci/deploy/generate_release_notes.sh "${MODULE}"/src/"${FLAVOR_APK_FOLDER}"/play/release-notes/"${PUBLISHING_LANGUAGE}"/"${RELEASE_TRACK}".txt 500
+      - name: Update tag using tag-flow
+        id: update_tag
+        run: |
+          ./scripts/ci/deploy/update_tags.sh
+
+          ARTIFACTS_TAG=$(git describe --abbrev=0 --tags)
+          echo ::set-output name=artifacts_tag::"${ARTIFACTS_TAG}" # saved as output of the step
       - name: Generate daily snapshot and publish it
         id: generate_artifacts
         env:
-          MODULE: app
-          FLAVOR: ""
-          RELEASE_TRACK: internal
           RELEASE_KEYSTORE_PATH: ${{ steps.dump_keystore.outputs.release_keystore_path }}
           RELEASE_KEYSTORE_PWD: ${{ secrets.RELEASE_KEYSTORE_PWD }}
           RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
@@ -81,9 +105,6 @@ jobs:
           GPP_SERVICE_ACCOUNT_PATH: ${{ steps.dump_gpp_service_account.outputs.gpp_service_account_path }}
         run: |
           ./scripts/ci/deploy/generate_build.sh "$MODULE" "$FLAVOR" "$RELEASE_TRACK"
-
-          ARTIFACTS_TAG=$(git describe --abbrev=0 --tags)
-          echo ::set-output name=artifacts_tag::"${ARTIFACTS_TAG}" # saved as output of the step
       - name: Store build artifacts into workspace
         uses: actions/upload-artifact@v1
         with:
@@ -97,4 +118,4 @@ jobs:
           artifacts:
             "release/artifacts/*"
           prerelease: true
-          tag: ${{ steps.generate_artifacts.outputs.artifacts_tag }}
+          tag: ${{ steps.update_tag.outputs.artifacts_tag }}

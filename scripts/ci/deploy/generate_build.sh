@@ -23,16 +23,6 @@ FLAVOR=$2
 RELEASE_TRACK=$3
 
 FLAVOR_CAPITALIZED=$(python -c "print(\"${FLAVOR}\".capitalize())")
-RELEASE_TRACK_CAPITALIZED=$(python -c "print(\"${RELEASE_TRACK}\".capitalize())")
-
-echo "${BOLD}Prepare release notes for flavor${YELLOW} ${FLAVOR}${NO_STYLE}..."
-./gradlew clean :"${MODULE}":copyGitChangelogTo"${FLAVOR_CAPITALIZED}"Release"${RELEASE_TRACK_CAPITALIZED}"ReleaseNotes
-
-# TODO: extract to separate script update_tags.sh
-echo "${BOLD}Initialize and apply tag-flow...${NO_STYLE}"
-git submodule update --init --recursive --remote
-python tag-flow/tag.py
-git push --tags
 
 
 if [ -z "${RELEASE_TRACK}" ];
@@ -53,7 +43,6 @@ FLAVOR_APK_FOLDER=$(if [ -z "$FLAVOR" ]; then echo "release"; else echo "${FLAVO
 
 mkdir -p release/artifacts
 cp "${MODULE}"/build/outputs/apk/"${FLAVOR_APK_FOLDER}"/*-release.apk release/artifacts/
-cp "${MODULE}"/src/"${FLAVOR_APK_FOLDER}"/play/release-notes/*/"${RELEASE_TRACK}".txt release/release-notes.txt
 # Comment if the build is not obfuscated
 #FLAVOR_MAPPING_FOLDER=$(if [ -z "$FLAVOR" ]; then echo "release"; else echo "${FLAVOR}Release"; fi)
 #cp "${MODULE}"/build/outputs/mapping/"${FLAVOR_MAPPING_FOLDER}"/*-release-mapping.txt release/artifacts/
