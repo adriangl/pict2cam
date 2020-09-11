@@ -1,0 +1,8 @@
+# Basic dependabot.yml file that checks Gradle dependencies in the project
+version: 2
+
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
