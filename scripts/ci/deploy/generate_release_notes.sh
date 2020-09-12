@@ -52,15 +52,24 @@ echo "Dumping changelog to file: ${BOLD}${RELEASE_NOTES_FILE_PATH}${NO_STYLE}...
 mkdir -p "$(dirname "${RELEASE_NOTES_FILE_PATH}")" && touch "${RELEASE_NOTES_FILE_PATH}"
 printf "%b" "${CHANGELOG}" > "${RELEASE_NOTES_FILE_PATH}"
 
+# Check if we have to trim the changelog if there's a character limit
 if [ -z "${CHARACTER_LIMIT}" ];
 then
   echo "No file trim needed"
 else
-  # If we need to trim the file, re-read the file, trim it and dump it again to the final file with the footer text
-  CHANGELOG_MAX_CHARACTER_LENGTH=$(python -c "print(${CHARACTER_LIMIT} - ${FILE_TRIM_FOOTER_CHARACTER_COUNT})")
-  TRIMMED_CHANGELOG=$(python -c "print(open('${RELEASE_NOTES_FILE_PATH}', 'rt').read(${CHANGELOG_MAX_CHARACTER_LENGTH}))")
+  # First check if we changelog surpasses the character limit. If it doesn't, do nothing
+  CHANGELOG_CHARACTER_LENGTH=${#CHANGELOG}
+  if [ "${CHANGELOG_CHARACTER_LENGTH}" -gt "${CHARACTER_LIMIT}" ];
+  then
+    # If we do need to trim the file, re-read the file, trim it and dump it again to the final file with the footer text
+    CHANGELOG_MAX_CHARACTER_LENGTH=$(python -c "print(${CHARACTER_LIMIT} - ${FILE_TRIM_FOOTER_CHARACTER_COUNT})")
+    TRIMMED_CHANGELOG=$(python -c "print(open('${RELEASE_NOTES_FILE_PATH}', 'rt').read(${CHANGELOG_MAX_CHARACTER_LENGTH}))")
 
-  printf "%b" "${TRIMMED_CHANGELOG}" > "${RELEASE_NOTES_FILE_PATH}"
-  printf "%b" "${FILE_TRIM_FOOTER}" >> "${RELEASE_NOTES_FILE_PATH}"
-  echo "File trimmed to ${CHARACTER_LIMIT} characters"
+    printf "%b" "${TRIMMED_CHANGELOG}" > "${RELEASE_NOTES_FILE_PATH}"
+    printf "%b" "${FILE_TRIM_FOOTER}" >> "${RELEASE_NOTES_FILE_PATH}"
+    echo "Changelog trimmed to ${CHARACTER_LIMIT} characters"
+  else
+    # If we don't, leave the changelog as is
+    echo "No need to trim the changelog, it has less than ${CHARACTER_LIMIT} characters"
+  fi;
 fi;
