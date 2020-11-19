@@ -18,10 +18,10 @@ jobs:
           export RELEASE_TRACK=internal
           export DEFAULT_PUBLISHING_LANGUAGE=es-ES
 
-          echo "MODULE=$MODULE" >> $GITHUB_ENV
-          echo "FLAVOR=$FLAVOR" >> $GITHUB_ENV
-          echo "RELEASE_TRACK=$RELEASE_TRACK" >> $GITHUB_ENV
-          echo "DEFAULT_PUBLISHING_LANGUAGE=$DEFAULT_PUBLISHING_LANGUAGE" >> $GITHUB_ENV
+          echo "MODULE=$MODULE" >> "$GITHUB_ENV"
+          echo "FLAVOR=$FLAVOR" >> "$GITHUB_ENV"
+          echo "RELEASE_TRACK=$RELEASE_TRACK" >> "$GITHUB_ENV"
+          echo "DEFAULT_PUBLISHING_LANGUAGE=$DEFAULT_PUBLISHING_LANGUAGE" >> "$GITHUB_ENV"
       - name: Cancel previous runs
         uses: styfle/cancel-workflow-action@0.4.1
         with:
