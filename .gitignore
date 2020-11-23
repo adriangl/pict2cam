@@ -203,3 +203,6 @@ settings.properties
 publishing.properties
 signing.properties
 poeditor.properties
+
+# CI release folder
+release/

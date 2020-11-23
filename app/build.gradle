@@ -34,8 +34,8 @@ androidGitVersion {
 }
 
 poEditor {
-    // Provide your own PoEditor API token by setting the "api_token" property in "/poeditor.properties"
-    apiToken = loadEnvOrProperty("api_token", "", "poeditor.properties")
+    // Provide your own PoEditor API token by setting the "apiToken" property in "/poeditor.properties"
+    apiToken = loadEnvOrProperty("API_TOKEN", "", "poeditor.properties")
     projectId = 366581
 }
 

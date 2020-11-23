@@ -21,17 +21,15 @@
  * Check docs/publishing.md for more information.
  */
 apply plugin: 'com.github.triplet.play'
-
 /* Generic publishing information: we'll use the publish tasks to:
  * - Deploy to variable-configured track; if not configured defaults to internal tests track
- * - Release in "completed" status (so, automatically published) This is needed due to a bug in the Publishing API that does
- *   not allow uploading release notes in "draft" status.
+ * - Release in "completed" status (default value)
  */
 play {
     def serviceAccountCredentialsFile =
             file(loadEnvOrProperty("GPP_SERVICE_ACCOUNT_PATH", "blank-credentials.json", "publishing.properties"))
-    enabled = serviceAccountCredentialsFile.exists()
-    serviceAccountCredentials = serviceAccountCredentialsFile
-    track = loadEnvOrProperty("RELEASE_TRACK", "internal", "publishing.properties")
-    releaseStatus = "completed"
+
+    enabled.set(serviceAccountCredentialsFile.exists())
+    serviceAccountCredentials.set(serviceAccountCredentialsFile)
+    track.set(loadEnvOrProperty("RELEASE_TRACK", "internal", "publishing.properties"))
 }
