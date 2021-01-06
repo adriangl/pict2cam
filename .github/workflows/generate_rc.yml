@@ -37,16 +37,6 @@ jobs:
           fetch-depth: 0 # Whole repo history
       - name: Fetch tags
         run: git fetch origin +refs/tags/*:refs/tags/*
-      - name: Check if there has been new commits in the last 24 hours
-        id: check-new-commits
-        uses: adriangl/check-new-commits-action@v1.0.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: develop
-          seconds: 86400 # one day
-      - name: Cancel job if no new commits have been found in the last 24 hours
-        if: ${{ steps.check-new-commits.outputs.has-new-commits != 'true' }}
-        uses: andymckay/cancel-action@0.2
       - name: Restore caches
         uses: actions/cache@v2
         with:
