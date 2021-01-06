@@ -37,20 +37,15 @@ jobs:
           fetch-depth: 0 # Whole repo history
       - name: Fetch tags
         run: git fetch origin +refs/tags/*:refs/tags/*
-      - name: Verify if no version has been generated from this commit
-        id: verify_generate_version
-        run: |
-          # --exact-match is needed in case the current commit is not tagged
-          if [ ! -z $(git describe --abbrev=0 --tags --exact-match HEAD 2> /dev/null) ];
-          then
-            echo "The commit already has a tag, exiting..."
-            echo ::set-output name=generate_version::0 # saved as output of the step
-          else
-            echo "The commit doesn't have a tag, keep going..."
-            echo ::set-output name=generate_version::1 # saved as output of the step
-          fi
-      - name: Cancel job if no version needs to be generated
-        if: ${{ steps.verify_generate_version.outputs.generate_version == 0 }}
+      - name: Check if there has been new commits in the last 24 hours
+        id: check-new-commits
+        uses: adriangl/check-new-commits-action@v1.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: develop
+          seconds: 86400 # one day
+      - name: Cancel job if no new commits have been found in the last 24 hours
+        if: ${{ steps.check-new-commits.outputs.has-new-commits != 'true' }}
         uses: andymckay/cancel-action@0.2
       - name: Restore caches
         uses: actions/cache@v2
