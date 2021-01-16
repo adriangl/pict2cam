@@ -10,7 +10,7 @@ This means that you can provide any image in your device to apps that require yo
 ## Requirements
 * An Android device, obviously ;)
 * Android 5.0+
-** The app won't work in Android 11+ since Google restricted which apps can appear in the camera picker to [only the system default bundled camera app][android-11-google-restrictions].
+  * The app won't work in Android 11+ since Google restricted which apps can appear in the camera picker to [only the system default bundled camera app][android-11-google-restrictions].
 
 ## Features
 The app provides the following features:
