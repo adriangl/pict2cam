@@ -10,6 +10,7 @@ This means that you can provide any image in your device to apps that require yo
 ## Requirements
 * An Android device, obviously ;)
 * Android 5.0+
+** The app won't work in Android 11+ since Google restricted which apps can appear in the camera picker to [only the system default bundled camera app][android-11-google-restrictions].
 
 ## Features
 The app provides the following features:
@@ -47,3 +48,4 @@ limitations under the License.
 
 [google-play-link]:https://play.google.com/store/apps/details?id=com.adriangl.pict2cam
 [releases-page]:https://github.com/adriangl/pict2cam/releases
+[android-11-google-restrictions]:https://developer.android.com/about/versions/11/behavior-changes-11#media-capture

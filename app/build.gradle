@@ -45,10 +45,11 @@ ext {
      * Android variables
      ********************
      */
-    compile_sdk_version = 29
+    compile_sdk_version = 30
     min_sdk_version = 21
-    target_sdk_version = 29
-    build_tools_version = "29.0.3"
+    max_sdk_version = 29
+    target_sdk_version = 30
+    build_tools_version = "30.0.2"
     // The Android version is multiplied by a big number so it is placed in the leftmost part
     // of the version code because we can't add it in androidGitVersion's codeFormat parameter
     version_code = compile_sdk_version * 100000 + androidGitVersion.code()
@@ -59,7 +60,7 @@ ext {
      * Libraries
      ********************
      */
-    kotlin_coroutines_version = "1.3.9"
+    kotlin_coroutines_version = "1.4.2"
 }
 
 android {
@@ -70,6 +71,7 @@ android {
         applicationId "com.adriangl.pict2cam"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
+        maxSdkVersion max_sdk_version
         versionCode version_code
         versionName version_name
 
