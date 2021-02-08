@@ -38,7 +38,7 @@ jobs:
       - name: Fetch tags
         run: git fetch origin +refs/tags/*:refs/tags/*
       - name: Restore caches
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.4
         with:
           path: |
             ~/.gradle/caches
