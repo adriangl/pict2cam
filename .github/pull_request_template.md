@@ -1,5 +1,5 @@
 ### Github issue (delete if this does not apply)
-Resolves #change_me_issue_number
+Resolves #issue_number
 
 ### PR's key points
 A concise summary of how the PR was done. Also detail the decisions that you made and why you made
