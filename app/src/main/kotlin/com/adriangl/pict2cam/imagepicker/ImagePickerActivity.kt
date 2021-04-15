@@ -33,6 +33,7 @@ import com.adriangl.pict2cam.extensions.getImageCaptureOutputUri
 import com.adriangl.pict2cam.extensions.isImageCaptureAction
 import com.adriangl.pict2cam.utils.ImageConstants
 import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE
 
 /**
  * Picker activity needed to receive the result of the media query to return it to the original
@@ -92,6 +93,11 @@ class ImagePickerActivity : AppCompatActivity() {
                     finish()
                 }
             }
+        } else if (resultCode == CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            Toast.makeText(this, R.string.crop_image_activity_result_error, Toast.LENGTH_LONG)
+                    .show()
+            setResult(Activity.RESULT_CANCELED)
+            finish()
         } else {
             setResult(Activity.RESULT_CANCELED)
             finish()

@@ -32,5 +32,5 @@
     <string name="image_picker_chooser_title">"Select an app to pick images"</string>
     <string name="image_picker_write_external_rationale_message">"Confirm that you allow the app to write to external storage. This permission is needed for the app to work properly"</string>
     <string name="image_picker_write_external_rationale_action_allow">"Allow"</string>
-
+    <string name="crop_image_activity_result_error">"There has been an error while resizing the image"</string>
 </resources>
