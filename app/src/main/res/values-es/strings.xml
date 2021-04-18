@@ -32,4 +32,5 @@
     <string name="image_picker_chooser_title">"Elige una aplicación para seleccionar fotos"</string>
     <string name="image_picker_write_external_rationale_message">"Confirma que permites que la aplicación puede escribir en almacenamiento externo. Este permiso es necesario para que la aplicación funcione correctamente"</string>
     <string name="image_picker_write_external_rationale_action_allow">"Permitir"</string>
+    <string name="crop_image_activity_result_error">"Ha ocurrido un error al redimensionar la imagen"</string>
 </resources>

@@ -21,12 +21,20 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <!--
+        Note about requestLegacyExternalStorage: since the app will make no sense from Android 11
+        onwards (since we can no longer pick a camera app other than the system one from
+        ACTION_IMAGE_CAPTURE intents) we can take advantage of it and use the flag since it'll work
+        in Android 10 devices even if we update the targetSdkVersion.
+        Hope the big guys don't send me a warning about this.
+    -->
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Activities -->
