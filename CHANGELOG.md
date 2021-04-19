@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit.
 
 [Unreleased]: https://github.com/adriangl/pict2cam/compare/1.0.27...HEAD
-[1.0.27]: https://github.com/adriangl/pict2cam/releases/tag/1.0.18...1.0.27
-[1.0.18]: https://github.com/adriangl/pict2cam/releases/tag/1.0.0...1.0.18
-[1.0.0]: https://github.com/adriangl/pict2cam/releases/tag/0.1.0...1.0.0
+[1.0.27]: https://github.com/adriangl/pict2cam/compare/1.0.18...1.0.27
+[1.0.18]: https://github.com/adriangl/pict2cam/compare/1.0.0...1.0.18
+[1.0.0]: https://github.com/adriangl/pict2cam/compare/0.1.0...1.0.0
 [0.1.0]: https://github.com/adriangl/pict2cam/releases/tag/0.1.0
