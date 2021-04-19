@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - No security issues fixed!
 
+## [1.0.27] - 2021-01-16
+### Added
+- Show error toast if the cropping library cannot crop the image for any reason
+- Add `requestLegacyExternalStorage` flag to support apps requesting images with `file://` Uris in Android 10
+
 ## [1.0.18] - 2021-01-16
 ### Changed
 - Limit maxSdkVersion to API 29 (Android 10)
@@ -31,7 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit.
 
-[Unreleased]: https://github.com/adriangl/pict2cam/compare/1.0.18...HEAD
+[Unreleased]: https://github.com/adriangl/pict2cam/compare/1.0.27...HEAD
+[1.0.27]: https://github.com/adriangl/pict2cam/releases/tag/1.0.18...1.0.27
 [1.0.18]: https://github.com/adriangl/pict2cam/releases/tag/1.0.0...1.0.18
 [1.0.0]: https://github.com/adriangl/pict2cam/releases/tag/0.1.0...1.0.0
 [0.1.0]: https://github.com/adriangl/pict2cam/releases/tag/0.1.0
