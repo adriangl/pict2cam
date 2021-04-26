@@ -1,0 +1,184 @@
+# frozen_string_literal: true
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Generates daily snapshot and uploads it to GitHub as a pre-release"
+  desc "[String] app_keysafe_name: Name of the application in the keysafe"
+  desc "[String] app_keysafe_password: Password of the application in the keysafe"
+  desc "[String] artifact_type: Artifact to generate: APK or AAB"
+  desc "[String] github_repository_name: GitHub repository name"
+  desc "[String] github_api_token: GitHub API token that can publish releases"
+  lane :generate_daily_snapshot do |options|
+    UI.header("Generate new tag for the snapshot")
+    current_tag = last_git_tag
+
+    tag_flow_result = tag_flow(
+      increment: "patch",
+      push_to_repo: true,
+    )
+
+    new_tag = tag_flow_result[:version]
+
+    UI.header("Generate snapshot")
+    generate_internal_result = generate_internal(
+      app_name: options.fetch(:app_keysafe_name),
+      app_password: options.fetch(:app_keysafe_password),
+      artifact_type: options.fetch(:artifact_type)
+    )
+
+    if generate_internal_result.successful
+      UI.header("Create GitHub pre-release")
+      changelog = changelog_from_git_commits(
+        between: [current_tag, new_tag],
+        pretty: "%s",
+        merge_commit_filtering: "exclude_merges"
+      )
+
+      set_github_release(
+        repository_name: options.fetch(:github_repository_name),
+        api_token: options.fetch(:github_api_token),
+        tag_name: new_tag,
+        name: new_tag,
+        description: changelog,
+        upload_assets: [generate_internal_result.build_result.artifact_path, generate_internal_result.build_result.mapping_path].compact,
+        is_prerelease: true
+      )
+    else
+      UI.crash!("The snapshot could not be generated. Possible causes:\n"\
+      "Error(s): #{generate_internal_result.error}\n"\
+      "Did tests pass? #{generate_internal_result.tests_result.passed}\n"\
+      "Was build successful? #{generate_internal_result.successful}\n"\
+      "Was build published? #{generate_internal_result.publish_result.published}")
+    end
+  end
+
+  desc "Tests PRs and checks for integrity"
+  desc "[String] app_keysafe_name: Name of the application in the keysafe"
+  desc "[String] app_keysafe_password: Password of the application in the keysafe"
+  desc "[String] artifact_type: Artifact to generate: APK or AAB"
+  lane :validate_pr do |options|
+    UI.header("Run detekt")
+
+    gradle(
+      task: "detekt"
+    )
+
+    UI.header("Test the PR")
+
+    tests_result = build_and_test_pr(
+      app_name: options.fetch(:app_keysafe_name),
+      app_password: options.fetch(:app_keysafe_password),
+      artifact_type: options.fetch(:artifact_type)
+    )
+
+    if tests_result.passed
+      UI.success("Nice! Tests pass!")
+    else
+      UI.crash!("Tests didn't pass. Possible causes:\n"\
+      "Error(s): #{tests_result.error}\n"\
+      "Did tests pass? #{tests_result.passed}\n")
+    end
+  end
+
+  desc "Promote current internal build to alpha track"
+  desc "[String] app_keysafe_name: Name of the application in the keysafe"
+  desc "[String] app_keysafe_password: Password of the application in the keysafe"
+  lane :promote_to_alpha do |options|
+    UI.header("Promote to alpha")
+
+    promote_result = promote_internal_to_alpha(
+      app_name: options.fetch(:app_keysafe_name),
+      app_password: options.fetch(:app_keysafe_password)
+    )
+
+    if promote_result.published
+      UI.success("Nice! Your app is published to the alpha track!")
+    else
+      UI.crash!("App wasn't published. Possible causes:\n"\
+      "Error(s): #{promote_result.error}\n")
+    end
+  end
+
+  desc "Promote current alpha build to production track with 20% rollout"
+  desc "[String] app_keysafe_name: Name of the application in the keysafe"
+  desc "[String] app_keysafe_password: Password of the application in the keysafe"
+  lane :promote_to_production_20 do |options|
+    UI.header("Promote to production 20%")
+
+    promote_result = promote_alpha_to_production_20(
+      app_name: options.fetch(:app_keysafe_name),
+      app_password: options.fetch(:app_keysafe_password)
+    )
+
+    if promote_result.published
+      UI.success("Nice! Your app is published to the production track with 20% rollout!")
+    else
+      UI.crash!("App wasn't published. Possible causes:\n"\
+      "Error(s): #{promote_result.error}\n")
+    end
+  end
+
+  desc "Promote current stged production build to production track with 100% rollout"
+  desc "[String] app_keysafe_name: Name of the application in the keysafe"
+  desc "[String] app_keysafe_password: Password of the application in the keysafe"
+  desc "[String] artifact_type: Artifact to generate for HUAWEI AppGallery: APK or AAB"
+  lane :promote_to_production_100 do |options|
+    UI.header("Promote to production 100% in Google Play")
+
+    promote_result = promote_production_to_100(
+      app_name: options.fetch(:app_keysafe_name),
+      app_password: options.fetch(:app_keysafe_password)
+    )
+
+    if promote_result.published
+      UI.success("Nice! Your app is published to the production track with 100% rollout in Google Play!")
+    else
+      UI.crash!("App wasn't published to Google Play. Possible causes:\n"\
+      "Error(s): #{promote_result.error}\n")
+
+      return
+    end
+
+    # Now here's the tricky part: compiling the same version that is published to 100% and uploading it to
+    # HUAWEI AppGallery
+
+    UI.header("Generate release in HUAWEI AppGallery")
+
+    # Move to tag in repo. The version name MUST match the tag in the repo
+    version_name = promote_result.publish_result.version_name
+    sh("git checkout #{version_name}")
+
+    generate_result = generate_release_for_appgallery(
+      app_name: options.fetch(:app_keysafe_name),
+      app_password: options.fetch(:app_keysafe_password),
+      artifact_type: options.fetch(:artifact_type)
+    )
+
+    if generate_result.successful
+      UI.success("Nice! Your app is published to the production track with 100% rollout in HUAWEI AppGallery!")
+    else
+      UI.crash!("App wasn't published to HUAWEI AppGallery. Possible causes:\n"\
+      "Error(s): #{generate_result.error}\n"\
+      "Did tests pass? #{generate_result.tests_result.passed}\n"\
+      "Was build successful? #{generate_result.successful}\n"\
+      "Was build published? #{generate_result.publish_result.published}")
+
+      return
+    end
+  end
+end

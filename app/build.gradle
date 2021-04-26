@@ -23,10 +23,11 @@ apply plugin: "kotlin-android-extensions"
 apply plugin: "io.gitlab.arturbosch.detekt"
 
 apply plugin: "com.gladed.androidgitversion"
-apply plugin: "com.bq.poeditor"
+apply plugin: "com.hyperdevs.poeditor"
+
+apply plugin: "de.mannodermaus.android-junit5"
 
 apply from: "$rootDir/gradle/properties_utils.gradle"
-apply from: "$rootDir/gradle/publishing.gradle"
 
 androidGitVersion {
     codeFormat "MNNPP"
@@ -60,7 +61,10 @@ ext {
      * Libraries
      ********************
      */
-    kotlin_coroutines_version = "1.4.2"
+    kotlin_coroutines_version = "1.4.3"
+    espresso_version = "3.3.0"
+    mockito_version = "3.8.0"
+    fragment_version = "1.3.1"
 }
 
 android {
@@ -81,6 +85,8 @@ android {
 
         // Only bundle verified translations
         resConfigs("en", "es")
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     // New system introduced in AGP 4.0.0 to specify features that your build needs (or doesn't need) and improve build
@@ -195,6 +201,30 @@ dependencies {
 
     // Detekt formatting plugin
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${detekt_version}")
+
+    // Testing
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testImplementation "org.mockito:mockito-core:3.8.0"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+
+    // Use jUnit5 in unit tests
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.1"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"
+
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
+
+    androidTestImplementation "com.agoda.kakao:kakao:2.4.0"
+    androidTestImplementation "androidx.test:runner:1.3.0"
+    androidTestImplementation "androidx.test:rules:1.3.0"
+    androidTestImplementation("androidx.test.espresso:espresso-core:$espresso_version", {
+        exclude group: "androidx.annotation", module: "annotation"
+    })
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-web:$espresso_version"
 }
 
 afterEvaluate {

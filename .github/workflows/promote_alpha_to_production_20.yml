@@ -1,0 +1,47 @@
+name: Promote alpha version to production with 20% rollout
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cancel_previous:
+    name: Cancel previous runs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
+  promote_alpha_to_production_20:
+    name: Promote alpha version to production with 20% rollout
+    runs-on: ubuntu-latest
+    needs: cancel_previous
+
+      - name: Install fastlane-plugin-android_build_tools deploy key
+        uses: shimataro/ssh-key-action@v2.3.0
+        with:
+          key: ${{ secrets.ANDROID_BUILD_TOOLS_DEPLOY_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Set-up and configure Ruby
+        uses: ruby/setup-ruby@v1.78.0
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Install keysafe deploy key
+        uses: shimataro/ssh-key-action@v2.3.0
+        with:
+          key: ${{ secrets.KEYSAFE_DEPLOY_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          if_key_exists: replace
+
+      - name: Promote internal to alpha
+        env:
+          KEYSAFE_REPO_URL: ${{ secrets.KEYSAFE_REPO_URL }}
+          APP_KEYSAFE_NAME: ${{ secrets.APP_KEYSAFE_NAME }}
+          APP_KEYSAFE_PASSWORD: ${{ secrets.APP_KEYSAFE_PASSWORD }}
+        run: |
+          bundle exec fastlane promote_to_production_20 app_keysafe_name:"$APP_KEYSAFE_NAME" app_keysafe_password:"$APP_KEYSAFE_PASSWORD"
