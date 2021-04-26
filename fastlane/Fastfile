@@ -1,0 +1,398 @@
+# frozen_string_literal: true
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+import "helpers/build.rb"
+import "helpers/keysafe.rb"
+import "helpers/publish/google_play.rb"
+import "helpers/publish/huawei.rb"
+import "helpers/tests.rb"
+
+default_platform(:android)
+
+platform :android do
+  before_all do |_lane, options|
+    # Download keys repo and set it up
+    init_keysafe(options.fetch(:app_name))
+  end
+
+  after_all do |_lane, _options|
+    # Remove secrets if no longer needed
+    delete_keysafe
+  end
+
+  error do |_lane, _exception|
+    # Remove secrets if no longer needed
+    delete_keysafe
+    # Send error notification
+  end
+
+  desc "Run unit tests in the project"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `app_module` - (Optional) The module to build. Defaults to `app`."
+  desc "* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string."
+  desc "* `clean` - (Optional) Boolean that enables cleaning the project before running. Defaults to false."
+  desc ""
+  desc "Returns:"
+  desc "* a `TestsResult` object containing whether or not the tests passed and an array of JUnit XML files."
+  lane :unit_tests do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    app_module = options[:app_module] || "app"
+    app_variant = options[:app_variant] ? options[:app_variant].split(",").map { |s| s.strip.capitalize }.join : ""
+    clean_project = options[:clean] || false
+
+    clean if clean_project
+
+    run_unit_tests(app_module, app_variant)
+  end
+
+  desc "Run instrumented tests in the project using Firebase Test Lab."
+  desc ""
+  desc "Ensure that you have installed `gcloud` and `gsutil` in your system and are accesible in PATH before running this lane."
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `app_module` - (Optional) The module to build. Defaults to `app`."
+  desc "* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string."
+  desc "* `clean` - (Optional) Boolean that enables cleaning the project before running. Defaults to false."
+  desc ""
+  desc "Returns:"
+  desc "* a `TestsResult` object containing whether or not the tests passed and an array of JUnit XML files."
+  lane :instrumented_tests_in_firebase_test_lab do |options|
+    app_name = options.fetch(:app_name)
+    app_module = options[:app_module] || "app"
+    app_variant = options[:app_variant] ? options[:app_variant].split(",").map { |s| s.strip.capitalize }.join : ""
+    clean_project = options[:clean] || false
+
+    clean if clean_project
+
+    # Build the app in debug mode and the test APK
+    debug_apk_result = debug_apk(app_name: app_name, app_module: app_module, app_variant: app_variant)
+    debug_apk_path = debug_apk_result.apk_path
+
+    tests_apk_result = tests_apk(app_name: app_name, app_module: app_module, app_variant: app_variant)
+    tests_apk_path = tests_apk_result.apk_path
+
+    # Test in Firebase Test Lab
+    ftl_data = get_firebase_test_lab_data
+    run_instrumented_tests_in_firebase_test_lab(
+      ftl_data.project_id,
+      ftl_data.service_account_json_path,
+      debug_apk_path,
+      tests_apk_path
+    )
+  end
+
+  desc "Generates a debug APK build of the app"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `app_module` - (Optional) The module to build. Defaults to `app`."
+  desc "* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string."
+  desc "* `clean` - (Optional) Boolean that enables cleaning the project before running. Defaults to false."
+  desc ""
+  desc "Returns:"
+  desc "* `BuildResult` object containing the generated APK path and the Proguard Mapping file if generated"
+  lane :debug_apk do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    app_module = options[:app_module] || "app"
+    app_variant = options[:app_variant] ? options[:app_variant].split(",").map { |s| s.strip.capitalize }.join : ""
+    clean_project = options[:clean] || false
+
+    clean if clean_project
+
+    build_debug_apk(app_module, app_variant)
+  end
+
+  desc "Generates a test APK build of the app to use with a debug APK to run instrumented tests"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `app_module` - (Optional) The module to build. Defaults to `app`."
+  desc "* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string."
+  desc "* `clean` - (Optional) Boolean that enables cleaning the project before running. Defaults to false."
+  desc ""
+  desc "Returns:"
+  desc "* a `BuildResult` object containing the generated APK path and the Proguard Mapping file if generated"
+  lane :tests_apk do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    app_module = options[:app_module] || "app"
+    app_variant = options[:app_variant] ? options[:app_variant].split(",").map { |s| s.strip.capitalize }.join : ""
+    clean_project = options[:clean] || false
+
+    clean if clean_project
+
+    build_instrumented_tests_apk(app_module, app_variant)
+  end
+
+  desc "Generates a release APK build of the app"
+  desc ""
+  desc "Ensure that the apps' `signingConfig` blocks are defined and that they can be obtained from the Gradle project like this:"
+  desc "```groovy"
+  desc "project.property(\"releaseKeystorePath\")"
+  desc "project.property(\"releaseKeystorePwd\")"
+  desc "project.property(\"releaseKeystoreAlias\")"
+  desc "project.property(\"releaseKeystoreAliasPwd\")"
+  desc "```"
+  desc "If you add the `property_prefix` parameter, don't forget to include it in your key loading. For example, if you set `free` "
+  desc "as the prefix, you'll have the following project properties:"
+  desc "```groovy"
+  desc "project.property(\"freeReleaseKeystorePath\")"
+  desc "project.property(\"freeReleaseKeystorePwd\")"
+  desc "project.property(\"freeReleaseKeystoreAlias\")"
+  desc "project.property(\"freeReleaseKeystoreAliasPwd\")"
+  desc "```"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `app_module` - (Optional) The module to build. Defaults to `app`."
+  desc "* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string."
+  desc "* `clean` - (Optional) Boolean that enables cleaning the project before running. Defaults to false."
+  desc "* `property_prefix` - (Optional) Prefix to add to keystore variables' names. Defaults to empty string."
+  desc ""
+  desc "Returns:"
+  desc "* a `BuildResult` object containing the generated APK path and the Proguard Mapping file if generated"
+  lane :release_apk do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    app_module = options[:app_module] || "app"
+    app_variant = options[:app_variant] ? options[:app_variant].split(",").map { |s| s.strip.capitalize }.join : ""
+    clean_project = options[:clean] || false
+    property_prefix = options[:property_prefix] || ""
+
+    clean if clean_project
+
+    keys_data = get_keys_data
+    build_release_apk(app_module,
+      app_variant,
+      keys_data.upload_keystore_path,
+      keys_data.upload_keystore_password,
+      keys_data.upload_keystore_alias,
+      keys_data.upload_keystore_alias_password,
+      property_prefix)
+  end
+
+  desc "Publishes an APK to the Google Play Store in the given track"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `track` - The track to use when publishing."
+  desc "* `apk_path` - Absolute path to the APK to publish."
+  desc "* `mapping_path` - Absolute path to the Proguard mapping path to attach to the publication. Defaults to nil."
+  desc ""
+  desc "Returns:"
+  desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
+  lane :publish_apk_play_store do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    track = options.fetch(:track)
+    apk_path = options.fetch(:apk_path)
+    mapping_path = options.fetch(:mapping_path)
+
+    google_play_data = get_google_play_data
+    publish_apk_to_google_play_store(track,
+      apk_path,
+      mapping_path,
+      google_play_data.package_name,
+      google_play_data.upload_service_account_json_path)
+  end
+
+  desc "Publishes an APK to HUAWEI AppGallery."
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `submit_for_review` - (Optional) Whether or not submit for review. Defaults to false."
+  desc "* `apk_path` - Absolute path to the APK to publish."
+  desc ""
+  desc "Returns:"
+  desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
+  lane :publish_apk_appgallery do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    submit_for_review = options[:submit_for_review] || false
+    apk_path = options.fetch(:apk_path)
+
+    huawei_data = get_huawei_data
+    publish_apk_to_huawei_appgallery(submit_for_review,
+      apk_path,
+      huawei_data.api_client_id,
+      huawei_data.api_client_secret,
+      huawei_data.app_id)
+  end
+
+  desc "Promotes the version in a track into another track in Google Play Store, with a given staged rollout percentage."
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `from_track` - The track to promote from."
+  desc "* `to_track` - The track to promote to."
+  desc "* `staged_rollout_percentage` - (Optional) Float value from 0 to 100 to perform a staged rollout. Defaults to nil, indicating no staged rollout."
+  desc ""
+  desc "Returns:"
+  desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
+  lane :promote_google_play_store do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    from_track = options.fetch(:from_track)
+    to_track = options.fetch(:to_track)
+    staged_rollout_percentage = options[:staged_rollout_percentage]
+
+    google_play_data = get_google_play_data
+    promote_google_play_track(
+      from_track,
+      to_track,
+      google_play_data.package_name,
+      google_play_data.upload_service_account_json_path
+    )
+  end
+
+  desc "Updates the version to submit for review in HUAWEI AppGallery"
+  desc ""
+  desc "Options:"
+  desc "* `staged_rollout_percentage` - (Optional) Float value from 0 to 100 to perform a staged rollout. Defaults to nil, indicating no staged rollout."
+  desc ""
+  desc "Returns:"
+  desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
+  lane :submit_for_review_appgallery do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    rollout_percentage = options[:staged_rollout_percentage]
+
+    is_phased_release = !rollout_percentage.nil?
+
+    huawei_data = get_huawei_data
+    update_huawei_appgallery_release_for_review(
+      huawei_data.api_client_id,
+      huawei_data.api_client_secret,
+      huawei_data.app_id,
+      is_phased_release,
+      rollout_percentage
+    )
+  end
+
+  desc "Generate internal test version"
+  lane :generate_internal do |options|
+    # Gather parameters
+    app_name = options[:app_name]
+    app_module = options[:app_module] || "app"
+    app_variant = options[:app_variant] ? options[:app_variant].split(",").map { |s| s.strip.capitalize }.join : ""
+
+    # Clean cached data
+    clean
+
+    # Run unit tests: if they pass, go to next step, else stop the lane
+    unit_tests_results = unit_tests(app_name: app_name, app_module: app_module, app_variant: app_variant)
+    unless unit_tests_results.passed
+      # TODO: Send test results somewhere
+      UI.user_error!("Unit tests for app #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "}didn't pass")
+    end
+
+    # Test in Firebase Test Lab: if everything is OK, perform the next step, else stop the lane
+    instrumented_tests_results = instrumented_tests_in_firebase_test_lab(
+      app_name: app_name,
+      app_module: app_module,
+      app_variant: app_variant
+    )
+    unless instrumented_tests_results.passed
+      # TODO: Send test results somewhere
+      UI.user_error!("Instrumented tests for app #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "}didn't pass")
+    end
+
+    # Build release binary
+    release_apk_result = release_apk(app_name: app_name, app_module: app_module, app_variant: app_variant)
+
+    # Google Play: publish to internal track
+    google_play_upload_result = publish_apk_play_store(
+      app_name: app_name,
+      track: "internal",
+      apk_path: release_apk_result.apk_path,
+      mapping_path: release_apk_result.mapping_path
+    )
+
+    # Huawei AppGallery: publish without sending it to review
+    huawei_upload_result = publish_apk_appgallery(
+      app_name: app_name,
+      submit_for_review: false,
+      apk_path: release_apk_result.apk_path
+    )
+
+    # TODO: what to do if any of the uploads fails? Cancel the release? Upload to the other store?
+  end
+
+  desc "Promote from internal track to alpha"
+  lane :promote_internal_to_alpha do |_options|
+    # Google Play Store: promote internal to alpha
+    google_play_upload_result = promote_google_play_store(
+      app_name: app_name,
+      from_track: "internal",
+      to_track: "alpha",
+      package_name: google_play_data.package_name,
+      upload_service_account_json_path: google_play_data.upload_service_account_json_path
+    )
+
+    # Huawei AppGallery: do nothing
+
+    if google_play_upload_result.uploaded
+      UI.success("App version #{google_play_upload_result.version_name} promoted to Google Play alpha track")
+    else
+      UI.error!("App could not be promoted to Google Play alpha track")
+    end
+  end
+
+  desc "Promote from alpha to production with staged rollout"
+  lane :promote_alpha_to_production do
+    rollout_percentage = 20.0
+
+    # Google Play Store: promote from alpha to production with staged rollout
+    google_play_upload_result = promote_google_play_store(
+      app_name: app_name,
+      from_track: "alpha",
+      to_track: "production",
+      staged_rollout_percentage: rollout_percentage,
+      package_name: google_play_data.package_name,
+      upload_service_account_json_path: google_play_data.upload_service_account_json_path
+    )
+
+    # Huawei AppGallery: send the current version as review, and start a 20% phased release
+    # We'll set the release phase period up to 30 days so we can deal with cancelling later or updating
+    # to a full release
+    huawei_upload_result = submit_for_review_appgallery(
+      app_name: app_name,
+      staged_rollout_percentage: rollout_percentage
+    )
+
+    # TODO: what to do if any of the rollouts fails? Cancel the rollouts? Rollout to the other store?
+  end
+
+  desc "Update production staged rollout percentage"
+  lane :update_production_percentage do
+    rollout_percentage = 100.0
+
+    # Google Play Store: change production staged rollout percentage
+    google_play_upload_result = promote_google_play_store(
+      app_name: app_name,
+      from_track: "production",
+      to_track: "production",
+      staged_rollout_percentage: rollout_percentage,
+      package_name: google_play_data.package_name,
+      upload_service_account_json_path: google_play_data.upload_service_account_json_path
+    )
+
+    # Huawei AppGallery: change production staged rollout percentage
+    huawei_upload_result = submit_for_review_appgallery(
+      app_name: app_name,
+      staged_rollout_percentage: rollout_percentage
+    )
+
+    # TODO: what to do if any of the rollouts fails? Cancel the rollouts? Rollout to the other store?
+  end
+end
