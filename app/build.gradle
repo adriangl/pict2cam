@@ -191,7 +191,7 @@ dependencies {
 
     // Misc
     implementation "com.theartofdev.edmodo:android-image-cropper:2.8.0"
-    implementation "com.github.AppIntro:AppIntro:6.0.0"
+    implementation "com.github.AppIntro:AppIntro:6.1.0"
 
     // Detekt formatting plugin
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${detekt_version}")
