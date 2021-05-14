@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 require_relative "./models"
 
-def publish_apk_to_google_play_store(track, apk_path, mapping_path, package_name, upload_service_account_json_path)
+def publish_apk_to_google_play_store(track, apk_paths, mapping_paths, package_name, upload_service_account_json_path)
   UI.message("Publishing app to Google Play's #{track} track...")
 
   begin
     supply(
       validate_only: false,
       track: track.nil? ? "internal" : track,
-      apk: apk_path,
-      mapping: mapping_path,
+      apk_paths: apk_paths,
+      mapping_paths: mapping_paths,
       package_name: package_name,
       json_key: upload_service_account_json_path,
       skip_upload_aab: true,

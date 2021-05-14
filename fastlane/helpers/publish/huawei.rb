@@ -47,7 +47,7 @@ def publish_apk_to_huawei_appgallery(
       phase_release_start_time: phased_release_start&.strftime(date_format_string),
       phase_release_end_time: phased_release_end&.strftime(date_format_string),
       phase_release_description: phased_description,
-      phase_release_percent: phased_release_percentage&.to_s
+      phase_release_percent: phased_percentage
     )
 
     published = true
@@ -101,7 +101,7 @@ def update_huawei_appgallery_release_for_review(
       phase_release_start_time: phased_release_start&.strftime(date_format_string),
       phase_release_end_time: phased_release_end&.strftime(date_format_string),
       phase_release_description: phased_description,
-      phase_release_percent: phased_release_percentage&.to_s
+      phase_release_percent: phased_percentage
     )
 
     published = true
@@ -124,6 +124,6 @@ def get_huawei_published_version_name(api_client_id, api_client_secret, app_id)
   )
   version_name = app_info["versionNumber"]
 
-  UI.message("Huawei AppGallery version name published: #{version_name}")
+  UI.message("HUAWEI AppGallery version name published: #{version_name}")
   version_name
 end

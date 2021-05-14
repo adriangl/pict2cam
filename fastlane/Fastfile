@@ -191,21 +191,21 @@ platform :android do
   desc "Options:"
   desc "* `app_name` - Name of the app in the keysafe."
   desc "* `track` - The track to use when publishing."
-  desc "* `apk_path` - Absolute path to the APK to publish."
-  desc "* `mapping_path` - Absolute path to the Proguard mapping path to attach to the publication. Defaults to nil."
+  desc "* `apk_paths` - Comma-separated list of absolute paths to the APKs to publish."
+  desc "* `mapping_paths` - Comma-separated list of absolute paths to the Proguard mapping paths to attach to the publication. Defaults to nil."
   desc ""
   desc "Returns:"
   desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
   lane :publish_apk_play_store do |options|
     # app_name is not read here, but in before_all block, so we need it anyway
     track = options.fetch(:track)
-    apk_path = options.fetch(:apk_path)
-    mapping_path = options.fetch(:mapping_path)
+    apk_paths = options.fetch(:apk_paths).split(",")
+    mapping_paths = options[:mapping_path]&.split(",")
 
     google_play_data = get_google_play_data
     publish_apk_to_google_play_store(track,
-      apk_path,
-      mapping_path,
+      apk_paths,
+      mapping_paths,
       google_play_data.package_name,
       google_play_data.upload_service_account_json_path)
   end
@@ -359,8 +359,8 @@ platform :android do
     google_play_upload_result = publish_apk_play_store(
       app_name: app_name,
       track: "internal",
-      apk_path: release_apk_result.apk_path,
-      mapping_path: release_apk_result.mapping_path
+      apk_paths: [release_apk_result.apk_path],
+      mapping_paths: [release_apk_result.mapping_path]
     )
 
     if google_play_upload_result.published
