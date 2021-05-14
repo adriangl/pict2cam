@@ -18,6 +18,7 @@ import "helpers/build.rb"
 import "helpers/keysafe.rb"
 import "helpers/publish/google_play.rb"
 import "helpers/publish/huawei.rb"
+import "helpers/publish/firebase_app_distribution.rb"
 import "helpers/tests.rb"
 
 default_platform(:android)
@@ -237,7 +238,7 @@ platform :android do
   desc "* `app_name` - Name of the app in the keysafe."
   desc "* `from_track` - The track to promote from."
   desc "* `to_track` - The track to promote to."
-  desc "* `staged_rollout_percentage` - (Optional) Float value from 0 to 100 to perform a staged rollout. Defaults to nil, indicating no staged rollout."
+  desc "* `staged_rollout_percentage` - (Optional) Float from 0 to 100 to perform a staged rollout, or nil if no staged rollout"
   desc ""
   desc "Returns:"
   desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
@@ -248,18 +249,20 @@ platform :android do
     staged_rollout_percentage = options[:staged_rollout_percentage]
 
     google_play_data = get_google_play_data
-    promote_google_play_track(
+    promote_google_play_store_track(
       from_track,
       to_track,
       google_play_data.package_name,
-      google_play_data.upload_service_account_json_path
+      google_play_data.upload_service_account_json_path,
+      staged_rollout_percentage
     )
   end
 
   desc "Updates the version to submit for review in HUAWEI AppGallery"
   desc ""
   desc "Options:"
-  desc "* `staged_rollout_percentage` - (Optional) Float value from 0 to 100 to perform a staged rollout. Defaults to nil, indicating no staged rollout."
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `staged_rollout_percentage` - (Optional) Float from 0 to 100 to perform a staged rollout, or nil if no staged rollout"
   desc ""
   desc "Returns:"
   desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
@@ -279,7 +282,46 @@ platform :android do
     )
   end
 
-  desc "Generate internal test version"
+  desc "Uploads an APK to Firebase App Distribution"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `apk_path` - Absolute path to the APK to publish."
+  desc "* `app_variant` - (Optional) Comma separated list of the flavors that compose the variant of the app. Defaults to \"release\"."
+  desc "* `tester_emails` - (Optional) Comma separated list of tester emails. Defaults to nil."
+  desc "* `tester_groups` - (Optional) Comma separated list of tester groups. Defaults to nil."
+  desc "* `release_notes` - (Optional) Release notes for the version. Defaults to nil"
+  desc ""
+  desc "Returns:"
+  desc "* a `PublishVersionResult` object containing if the publication was published"
+  lane :publish_apk_to_firebase_app_distribution do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    apk_path = options.fetch(:apk_path)
+    app_variant = options[:app_variant] ? options[:app_variant].split(",") : ["release"]
+    tester_emails = options[:tester_emails]
+    tester_groups = options[:tester_groups]
+    release_notes = options[:release_notes]
+
+    firebase_app_distribution_data = get_firebase_app_distribution_data
+    firebase_app_id = firebase_app_distribution_data.build_variant_app_id_hash[app_variant]
+    firebase_app_distribution_service_account_json_path = firebase_app_distribution_data.service_account_json_path
+
+    upload_to_firebase_app_distribution(
+      firebase_app_id,
+      apk_path,
+      firebase_app_distribution_service_account_json_path,
+      tester_emails,
+      tester_groups,
+      release_notes
+    )
+  end
+
+  desc "Builds, tests and publishes an app version to stores' internal tracks."
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `app_module` - (Optional) The module to build. Defaults to `app`."
+  desc "* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string."
   lane :generate_internal do |options|
     # Gather parameters
     app_name = options[:app_name]
@@ -293,7 +335,7 @@ platform :android do
     unit_tests_results = unit_tests(app_name: app_name, app_module: app_module, app_variant: app_variant)
     unless unit_tests_results.passed
       # TODO: Send test results somewhere
-      UI.user_error!("Unit tests for app #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "}didn't pass")
+      UI.test_failure!("Unit tests for app #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "}didn't pass")
     end
 
     # Test in Firebase Test Lab: if everything is OK, perform the next step, else stop the lane
@@ -304,11 +346,14 @@ platform :android do
     )
     unless instrumented_tests_results.passed
       # TODO: Send test results somewhere
-      UI.user_error!("Instrumented tests for app #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "}didn't pass")
+      UI.test_failure!("Instrumented tests for app #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "}didn't pass")
     end
 
     # Build release binary
     release_apk_result = release_apk(app_name: app_name, app_module: app_module, app_variant: app_variant)
+    unless release_apk_result.successful
+      UI.build_failure!("Release binary for app #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "}failed")
+    end
 
     # Google Play: publish to internal track
     google_play_upload_result = publish_apk_play_store(
@@ -318,6 +363,13 @@ platform :android do
       mapping_path: release_apk_result.mapping_path
     )
 
+    if google_play_upload_result.published
+      UI.success("App #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "} published in Google Play Store's internal track!")
+    else
+      # Explicit error here, the Play Store is our main store, so if we can't publish, forget about publishing in other stores
+      UI.abort_with_message!("App #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "} could not be published to Google Play Store's internal track")
+    end
+
     # Huawei AppGallery: publish without sending it to review
     huawei_upload_result = publish_apk_appgallery(
       app_name: app_name,
@@ -325,31 +377,46 @@ platform :android do
       apk_path: release_apk_result.apk_path
     )
 
-    # TODO: what to do if any of the uploads fails? Cancel the release? Upload to the other store?
+    if huawei_upload_result.published
+      UI.success("App #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "} sent to HUAWEI AppGallery!")
+    else
+      # Simple error, just warn that the app wasn't published
+      UI.abort_with_message!("App #{app_name} #{app_variant.empty? ? "" : "and variant #{app_variant} "} could not be sent to HUAWEI AppGallery")
+    end
   end
 
-  desc "Promote from internal track to alpha"
-  lane :promote_internal_to_alpha do |_options|
+  desc "Promote internal track binary to alpha track in stores"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  lane :promote_internal_to_alpha do |options|
+    # Gather parameters
+    app_name = options[:app_name]
+
     # Google Play Store: promote internal to alpha
     google_play_upload_result = promote_google_play_store(
       app_name: app_name,
       from_track: "internal",
-      to_track: "alpha",
-      package_name: google_play_data.package_name,
-      upload_service_account_json_path: google_play_data.upload_service_account_json_path
+      to_track: "alpha"
     )
 
     # Huawei AppGallery: do nothing
 
-    if google_play_upload_result.uploaded
-      UI.success("App version #{google_play_upload_result.version_name} promoted to Google Play alpha track")
+    if google_play_upload_result.published
+      UI.success("App #{app_name} version #{google_play_upload_result.version_name} promoted to Google Play alpha track")
     else
-      UI.error!("App could not be promoted to Google Play alpha track")
+      UI.abort_with_message!("App #{app_name} could not be promoted to Google Play alpha track")
     end
   end
 
-  desc "Promote from alpha to production with staged rollout"
-  lane :promote_alpha_to_production do
+  desc "Promote alpha track binary to production track in stores with 20% rollout"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  lane :promote_alpha_to_production do |options|
+    # Gather parameters
+    app_name = options[:app_name]
+
     rollout_percentage = 20.0
 
     # Google Play Store: promote from alpha to production with staged rollout
@@ -357,10 +424,14 @@ platform :android do
       app_name: app_name,
       from_track: "alpha",
       to_track: "production",
-      staged_rollout_percentage: rollout_percentage,
-      package_name: google_play_data.package_name,
-      upload_service_account_json_path: google_play_data.upload_service_account_json_path
+      staged_rollout_percentage: rollout_percentage
     )
+
+    if google_play_upload_result.published
+      UI.success("App #{app_name} version #{google_play_upload_result.version_name} promoted to Google Play production with 20% rollout!")
+    else
+      UI.abort_with_message!("App #{app_name} could not be promoted to Google Play production track")
+    end
 
     # Huawei AppGallery: send the current version as review, and start a 20% phased release
     # We'll set the release phase period up to 30 days so we can deal with cancelling later or updating
@@ -370,11 +441,18 @@ platform :android do
       staged_rollout_percentage: rollout_percentage
     )
 
-    # TODO: what to do if any of the rollouts fails? Cancel the rollouts? Rollout to the other store?
+    if huawei_upload_result.published
+      UI.success("App #{app_name} submitted for review to HUAWEI AppGallery with 20% rollout!")
+    else
+      UI.abort_with_message!("App #{app_name} could not be sumbitted for review to HUAWEI AppGallery")
+    end
   end
 
   desc "Update production staged rollout percentage"
-  lane :update_production_percentage do
+  lane :update_production_percentage do |options|
+    # Gather parameters
+    app_name = options[:app_name]
+
     rollout_percentage = 100.0
 
     # Google Play Store: change production staged rollout percentage
@@ -382,10 +460,14 @@ platform :android do
       app_name: app_name,
       from_track: "production",
       to_track: "production",
-      staged_rollout_percentage: rollout_percentage,
-      package_name: google_play_data.package_name,
-      upload_service_account_json_path: google_play_data.upload_service_account_json_path
+      staged_rollout_percentage: rollout_percentage
     )
+
+    if google_play_upload_result.uploaded
+      UI.success("App #{app_name} version #{google_play_upload_result.version_name} promoted to Google Play production track!")
+    else
+      UI.abort_with_message!("App #{app_name} could not be promoted to Google Play production track")
+    end
 
     # Huawei AppGallery: change production staged rollout percentage
     huawei_upload_result = submit_for_review_appgallery(
@@ -393,6 +475,10 @@ platform :android do
       staged_rollout_percentage: rollout_percentage
     )
 
-    # TODO: what to do if any of the rollouts fails? Cancel the rollouts? Rollout to the other store?
+    if huawei_upload_result.uploaded
+      UI.success("App #{app_name} submitted for review to HUAWEI AppGallery!")
+    else
+      UI.abort_with_message!("App #{app_name} could not be sumbitted for review to HUAWEI AppGallery")
+    end
   end
 end

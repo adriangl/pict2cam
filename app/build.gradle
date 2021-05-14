@@ -23,7 +23,7 @@ apply plugin: "kotlin-android-extensions"
 apply plugin: "io.gitlab.arturbosch.detekt"
 
 apply plugin: "com.gladed.androidgitversion"
-apply plugin: "com.bq.poeditor"
+apply plugin: "com.hyperdevs.poeditor"
 
 apply plugin: "de.mannodermaus.android-junit5"
 

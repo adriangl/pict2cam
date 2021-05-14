@@ -79,11 +79,37 @@ def get_huawei_data
   Dir.chdir("..") do
     api_client_id = File.read("#{huawei_folder}/api-client-id.txt").strip
     api_client_secret = File.read("#{huawei_folder}/api-client-secret.txt").strip
-    app_id = File.read("#{huawei_folder}/api-client-secret.txt").strip
+    app_id = File.read("#{huawei_folder}/app-id.txt").strip
 
     return HuaweiData.new(api_client_id,
       api_client_secret,
       app_id)
+  end
+end
+
+def get_firebase_app_distribution_data
+  UI.message("Retrieving Firebase App Distribution data...")
+  fad_folder = "keysafe/firebase-app-distribution"
+  Dir.chdir("..") do
+    service_account_json_path = File.expand_path("#{fad_folder}/service-account.json")
+
+    # Search for app IDs in the folder
+    app_id_file_name_regex = /((.*)-)+app-id.txt/
+    build_variant_app_id_hash = Dir["#{fad_folder}/*app-id.txt"].map do |file|
+      file_absolute_path = File.expand_path(file)
+      file_name = File.basename(file_absolute_path)
+      app_id = File.read(file_absolute_path).strip
+
+      scan_result = file_name.scan(app_id_file_name_regex)
+      next if scan_result.empty?
+      build_variant = scan_result[0][1]
+
+      build_variant_array = build_variant.split("-")
+
+      [build_variant_array, app_id]
+    end.to_h
+
+    return FirebaseAppDistributionData.new(service_account_json_path, build_variant_app_id_hash)
   end
 end
 
@@ -145,5 +171,15 @@ class HuaweiData
     @api_client_id = api_client_id
     @api_client_secret = api_client_secret
     @app_id = app_id
+  end
+end
+
+class FirebaseAppDistributionData
+  attr_reader :service_account_json_path
+  attr_reader :build_variant_app_id_hash
+
+  def initialize(service_account_json_path, build_variant_app_id_hash)
+    @service_account_json_path = service_account_json_path
+    @build_variant_app_id_hash = build_variant_app_id_hash
   end
 end

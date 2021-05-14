@@ -229,7 +229,7 @@ Options:
 
 * `to_track` - The track to promote to.
 
-* `staged_rollout_percentage` - (Optional) Float value from 0 to 100 to perform a staged rollout. Defaults to nil, indicating no staged rollout.
+* `staged_rollout_percentage` - (Optional) Float from 0 to 100 to perform a staged rollout, or nil if no staged rollout
 
 
 
@@ -246,28 +246,79 @@ Updates the version to submit for review in HUAWEI AppGallery
 
 Options:
 
-* `staged_rollout_percentage` - (Optional) Float value from 0 to 100 to perform a staged rollout. Defaults to nil, indicating no staged rollout.
+* `app_name` - Name of the app in the keysafe.
+
+* `staged_rollout_percentage` - (Optional) Float from 0 to 100 to perform a staged rollout, or nil if no staged rollout
 
 
 
 Returns:
 
 * a `PublishVersionResult` object containing if the publication was published and the version name of the published app
+### android publish_apk_to_firebase_app_distribution
+```
+fastlane android publish_apk_to_firebase_app_distribution
+```
+Uploads an APK to Firebase App Distribution
+
+
+
+Options:
+
+* `app_name` - Name of the app in the keysafe.
+
+* `apk_path` - Absolute path to the APK to publish.
+
+* `app_variant` - (Optional) Comma separated list of the flavors that compose the variant of the app. Defaults to "release".
+
+* `tester_emails` - (Optional) Comma separated list of tester emails. Defaults to nil.
+
+* `tester_groups` - (Optional) Comma separated list of tester groups. Defaults to nil.
+
+* `release_notes` - (Optional) Release notes for the version. Defaults to nil
+
+
+
+Returns:
+
+* a `PublishVersionResult` object containing if the publication was published
 ### android generate_internal
 ```
 fastlane android generate_internal
 ```
-Generate internal test version
+Builds, tests and publishes an app version to stores' internal tracks.
+
+
+
+Options:
+
+* `app_name` - Name of the app in the keysafe.
+
+* `app_module` - (Optional) The module to build. Defaults to `app`.
+
+* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string.
 ### android promote_internal_to_alpha
 ```
 fastlane android promote_internal_to_alpha
 ```
-Promote from internal track to alpha
+Promote internal track binary to alpha track in stores
+
+
+
+Options:
+
+* `app_name` - Name of the app in the keysafe.
 ### android promote_alpha_to_production
 ```
 fastlane android promote_alpha_to_production
 ```
-Promote from alpha to production with staged rollout
+Promote alpha track binary to production track in stores with 20% rollout
+
+
+
+Options:
+
+* `app_name` - Name of the app in the keysafe.
 ### android update_production_percentage
 ```
 fastlane android update_production_percentage

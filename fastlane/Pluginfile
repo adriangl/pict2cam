@@ -2,4 +2,5 @@
 #
 # Ensure this file is checked in to source control!
 
-gem 'fastlane-plugin-huawei_appgallery_connect'
+gem 'fastlane-plugin-huawei_appgallery_connect', git: "https://github.com/adriangl/fastlane-plugin-huawei_appgallery_connect"
+gem 'fastlane-plugin-firebase_app_distribution'

@@ -7,22 +7,46 @@ def clean
 end
 
 def build_debug_apk(app_module, app_variant)
-  gradle(task: "#{app_module}:assemble#{app_variant}Debug", print_command: false)
-  BuildResult.new(Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH])
+  begin
+    gradle(task: "#{app_module}:assemble#{app_variant}Debug", print_command: false)
+
+    successful = true
+    apk_path = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+  rescue => e
+    UI.error(e)
+
+    successful = false
+    apk_path = nil
+  end
+
+  BuildResult.new(successful, apk_path)
 end
 
 def build_instrumented_tests_apk(app_module, app_variant)
-  gradle(task: "#{app_module}:assemble#{app_variant}DebugAndroidTest", print_command: false)
-  BuildResult.new(Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH])
+  begin
+    gradle(task: "#{app_module}:assemble#{app_variant}DebugAndroidTest", print_command: false)
+
+    successful = true
+    apk_path = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+  rescue => e
+    UI.error(e)
+
+    successful = false
+    apk_path = nil
+  end
+
+  BuildResult.new(successful, apk_path)
 end
 
-def build_release_apk(app_module,
+def build_release_apk(
+  app_module,
   app_variant,
   keystore_path,
   keystore_password,
   keystore_alias,
   keystore_alias_password,
-  property_prefix = "")
+  property_prefix = ""
+)
   signing_properties = {
     "#{property_prefix}ReleaseKeystorePath".camelize(:lower) => keystore_path,
     "#{property_prefix}ReleaseKeystorePwd".camelize(:lower) => keystore_password,
@@ -30,16 +54,25 @@ def build_release_apk(app_module,
     "#{property_prefix}ReleaseKeystoreAliasPwd".camelize(:lower) => keystore_alias_password,
   }
 
-  gradle(
-    task: "#{app_module}:assemble#{app_variant}Release",
-    print_command: false,
-    properties: signing_properties
-  )
+  begin
+    gradle(
+      task: "#{app_module}:assemble#{app_variant}Release",
+      print_command: false,
+      properties: signing_properties
+    )
 
-  BuildResult.new(
-    Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-    Actions.lane_context[SharedValues::GRADLE_MAPPING_TXT_OUTPUT_PATH]
-  )
+    successful = true
+    apk_path = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    mapping_path = Actions.lane_context[SharedValues::GRADLE_MAPPING_TXT_OUTPUT_PATH]
+  rescue => e
+    UI.error(e)
+
+    successful = false
+    apk_path = nil
+    mapping_path = nil
+  end
+
+  BuildResult.new(successful, apk_path, mapping_path)
 end
 
 class BuildResult

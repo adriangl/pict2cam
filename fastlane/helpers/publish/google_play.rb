@@ -36,7 +36,7 @@ def promote_google_play_store_track(from_track, to_track, package_name, upload_s
   UI.message("Promoting Google Play version from \"#{from_track}\" to \"#{to_track}\""\
     "#{" with rollout of #{staged_rollout_percentage}%" unless staged_rollout_percentage.nil?}...")
 
-  rollout = staged_rollout_percentage.to_f / 100.0 unless staged_rollout_percentage.nil?
+  rollout = (staged_rollout_percentage.to_f / 100.0).to_s unless staged_rollout_percentage.nil?
 
   begin
     supply(
