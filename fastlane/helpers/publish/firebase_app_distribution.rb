@@ -3,7 +3,8 @@ require_relative "./models"
 
 def upload_to_firebase_app_distribution(
   firebase_app_id,
-  apk_path,
+  artifact_path,
+  artifact_type,
   publish_service_account_json_path,
   tester_emails = nil,
   tester_groups = nil,
@@ -14,7 +15,8 @@ def upload_to_firebase_app_distribution(
   begin
     firebase_app_distribution(
       app: firebase_app_id,
-      apk_path: apk_path,
+      android_artifact_path: artifact_path,
+      android_artifact_type: artifact_type,
       service_credentials_file: publish_service_account_json_path,
       testers: tester_emails,
       groups: tester_groups,

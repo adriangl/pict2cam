@@ -356,9 +356,9 @@ Options:
 Returns:
 
 * a `PublishVersionResult` object containing if the publication was published and the version name of the published app
-### android publish_apk_to_firebase_app_distribution
+### android publish_artifact_to_firebase_app_distribution
 ```
-fastlane android publish_apk_to_firebase_app_distribution
+fastlane android publish_artifact_to_firebase_app_distribution
 ```
 Uploads an APK to Firebase App Distribution
 
@@ -368,7 +368,9 @@ Options:
 
 * `app_name` - Name of the app in the keysafe.
 
-* `apk_path` - Absolute path to the APK to publish.
+* `artifact_path` - Absolute path to the artifact (APK or AAB) to publish.
+
+* `artifact_type` - (Optional) Type of artifact (`APK` or `AAB`) to publish. Defaults to `APK`.
 
 * `app_variant` - (Optional) Comma separated list of the flavors that compose the variant of the app. Defaults to "release".
 

@@ -19,7 +19,7 @@ def build_debug_apk(app_module, app_variant)
     apk_path = nil
   end
 
-  BuildResult.new(successful, apk_path)
+  BuildResult.new(successful, apk_path, BuildResult::ARTIFACT_TYPE_APK)
 end
 
 def build_instrumented_tests_apk(app_module, app_variant)
@@ -35,7 +35,7 @@ def build_instrumented_tests_apk(app_module, app_variant)
     apk_path = nil
   end
 
-  BuildResult.new(successful, apk_path)
+  BuildResult.new(successful, apk_path, BuildResult::ARTIFACT_TYPE_APK)
 end
 
 def build_release_apk(
@@ -62,17 +62,17 @@ def build_release_apk(
     )
 
     successful = true
-    apk_path = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    artifact_path = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
     mapping_path = Actions.lane_context[SharedValues::GRADLE_MAPPING_TXT_OUTPUT_PATH]
   rescue => e
     UI.error(e)
 
     successful = false
-    apk_path = nil
+    artifact_path = nil
     mapping_path = nil
   end
 
-  BuildResult.new(successful, apk_path, mapping_path)
+  BuildResult.new(successful, artifact_path, BuildResult::ARTIFACT_TYPE_APK, mapping_path)
 end
 
 def build_release_aab(
@@ -99,28 +99,33 @@ def build_release_aab(
     )
 
     successful = true
-    aab_path = Actions.lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
+    artifact_path = Actions.lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
     mapping_path = Actions.lane_context[SharedValues::GRADLE_MAPPING_TXT_OUTPUT_PATH]
   rescue => e
     UI.error(e)
 
     successful = false
-    aab_path = nil
+    artifact_path = nil
     mapping_path = nil
   end
 
-  BuildResult.new(successful, aab_path, mapping_path)
+  BuildResult.new(successful, artifact_path, BuildResult::ARTIFACT_TYPE_AAB, mapping_path)
 end
 
 class BuildResult
+  ARTIFACT_TYPE_APK = "APK"
+  ARTIFACT_TYPE_AAB = "AAB"
+
   # We use attr_reader here so we dont have access to read the variables, and not to write them
   attr_reader :successful
-  attr_reader :apk_path
+  attr_reader :artifact_path
+  attr_reader :artifact_type
   attr_reader :mapping_path
 
-  def initialize(successful, apk_path, mapping_path = nil)
+  def initialize(successful, artifact_path, artifact_type, mapping_path = nil)
     @successful = successful
-    @apk_path = apk_path
+    @artifact_path = artifact_path
+    @artifact_type = artifact_type
     @mapping_path = mapping_path
   end
 end

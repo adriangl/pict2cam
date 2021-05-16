@@ -83,10 +83,10 @@ platform :android do
 
     # Build the app in debug mode and the test APK
     debug_apk_result = debug_apk(app_name: app_name, app_module: app_module, app_variant: app_variant)
-    debug_apk_path = debug_apk_result.apk_path
+    debug_apk_path = debug_apk_result.artifact_path
 
     tests_apk_result = tests_apk(app_name: app_name, app_module: app_module, app_variant: app_variant)
-    tests_apk_path = tests_apk_result.apk_path
+    tests_apk_path = tests_apk_result.artifact_path
 
     # Test in Firebase Test Lab
     ftl_data = get_firebase_test_lab_data
@@ -378,7 +378,8 @@ platform :android do
   desc ""
   desc "Options:"
   desc "* `app_name` - Name of the app in the keysafe."
-  desc "* `apk_path` - Absolute path to the APK to publish."
+  desc "* `artifact_path` - Absolute path to the artifact (APK or AAB) to publish."
+  desc "* `artifact_type` - (Optional) Type of artifact (`APK` or `AAB`) to publish. Defaults to `APK`."
   desc "* `app_variant` - (Optional) Comma separated list of the flavors that compose the variant of the app. Defaults to \"release\"."
   desc "* `tester_emails` - (Optional) Comma separated list of tester emails. Defaults to nil."
   desc "* `tester_groups` - (Optional) Comma separated list of tester groups. Defaults to nil."
@@ -386,9 +387,10 @@ platform :android do
   desc ""
   desc "Returns:"
   desc "* a `PublishVersionResult` object containing if the publication was published"
-  lane :publish_apk_to_firebase_app_distribution do |options|
+  lane :publish_artifact_to_firebase_app_distribution do |options|
     # app_name is not read here, but in before_all block, so we need it anyway
-    apk_path = options.fetch(:apk_path)
+    artifact_path = options.fetch(:artifact_path)
+    artifact_type = options[:artifact_type] || BuildResult::ARTIFACT_TYPE_APK
     app_variant = options[:app_variant] ? options[:app_variant].split(",") : ["release"]
     tester_emails = options[:tester_emails]
     tester_groups = options[:tester_groups]
@@ -400,7 +402,8 @@ platform :android do
 
     upload_to_firebase_app_distribution(
       firebase_app_id,
-      apk_path,
+      artifact_path,
+      artifact_type,
       firebase_app_distribution_service_account_json_path,
       tester_emails,
       tester_groups,
@@ -451,7 +454,7 @@ platform :android do
     google_play_upload_result = publish_apk_play_store(
       app_name: app_name,
       track: "internal",
-      apk_paths: [release_apk_result.apk_path],
+      apk_paths: [release_apk_result.artifact_path],
       mapping_paths: [release_apk_result.mapping_path]
     )
 
@@ -466,7 +469,7 @@ platform :android do
     huawei_upload_result = publish_apk_appgallery(
       app_name: app_name,
       submit_for_review: false,
-      apk_path: release_apk_result.apk_path
+      apk_path: release_apk_result.artifact_path
     )
 
     if huawei_upload_result.published
