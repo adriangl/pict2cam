@@ -169,6 +169,63 @@ Options:
 Returns:
 
 * a `BuildResult` object containing the generated APK path and the Proguard Mapping file if generated
+### android release_aab
+```
+fastlane android release_aab
+```
+Generates a release AAB build of the app
+
+
+
+Ensure that the apps' `signingConfig` blocks are defined and that they can be obtained from the Gradle project like this:
+
+```groovy
+
+project.property("releaseKeystorePath")
+
+project.property("releaseKeystorePwd")
+
+project.property("releaseKeystoreAlias")
+
+project.property("releaseKeystoreAliasPwd")
+
+```
+
+If you add the `property_prefix` parameter, don't forget to include it in your key loading. For example, if you set `free` 
+
+as the prefix, you'll have the following project properties:
+
+```groovy
+
+project.property("freeReleaseKeystorePath")
+
+project.property("freeReleaseKeystorePwd")
+
+project.property("freeReleaseKeystoreAlias")
+
+project.property("freeReleaseKeystoreAliasPwd")
+
+```
+
+
+
+Options:
+
+* `app_name` - Name of the app in the keysafe.
+
+* `app_module` - (Optional) The module to build. Defaults to `app`.
+
+* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string.
+
+* `clean` - (Optional) Boolean that enables cleaning the project before running. Defaults to false.
+
+* `property_prefix` - (Optional) Prefix to add to keystore variables' names. Defaults to empty string.
+
+
+
+Returns:
+
+* a `BuildResult` object containing the generated AAB path and the Proguard Mapping file if generated
 ### android publish_apk_play_store
 ```
 fastlane android publish_apk_play_store
@@ -183,9 +240,32 @@ Options:
 
 * `track` - The track to use when publishing.
 
-* `apk_path` - Absolute path to the APK to publish.
+* `apk_paths` - Comma-separated list of absolute paths to the APKs to publish.
 
-* `mapping_path` - Absolute path to the Proguard mapping path to attach to the publication. Defaults to nil.
+* `mapping_paths` - Comma-separated list of absolute paths to the Proguard mapping paths to attach to the publication. Defaults to nil.
+
+
+
+Returns:
+
+* a `PublishVersionResult` object containing if the publication was published and the version name of the published app
+### android publish_aab_play_store
+```
+fastlane android publish_aab_play_store
+```
+Publishes an AAB to the Google Play Store in the given track
+
+
+
+Options:
+
+* `app_name` - Name of the app in the keysafe.
+
+* `track` - The track to use when publishing.
+
+* `aab_paths` - Comma-separated list of absolute paths to the AABs to publish.
+
+* `mapping_paths` - Comma-separated list of absolute paths to the Proguard mapping paths to attach to the publication. Defaults to nil.
 
 
 
@@ -207,6 +287,27 @@ Options:
 * `submit_for_review` - (Optional) Whether or not submit for review. Defaults to false.
 
 * `apk_path` - Absolute path to the APK to publish.
+
+
+
+Returns:
+
+* a `PublishVersionResult` object containing if the publication was published and the version name of the published app
+### android publish_aab_appgallery
+```
+fastlane android publish_aab_appgallery
+```
+Publishes an AAB to HUAWEI AppGallery.
+
+
+
+Options:
+
+* `app_name` - Name of the app in the keysafe.
+
+* `submit_for_review` - (Optional) Whether or not submit for review. Defaults to false.
+
+* `aab_path` - Absolute path to the AAB to publish.
 
 
 

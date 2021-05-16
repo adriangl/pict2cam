@@ -75,6 +75,43 @@ def build_release_apk(
   BuildResult.new(successful, apk_path, mapping_path)
 end
 
+def build_release_aab(
+  app_module,
+  app_variant,
+  keystore_path,
+  keystore_password,
+  keystore_alias,
+  keystore_alias_password,
+  property_prefix = ""
+)
+  signing_properties = {
+    "#{property_prefix}ReleaseKeystorePath".camelize(:lower) => keystore_path,
+    "#{property_prefix}ReleaseKeystorePwd".camelize(:lower) => keystore_password,
+    "#{property_prefix}ReleaseKeystoreAlias".camelize(:lower) => keystore_alias,
+    "#{property_prefix}ReleaseKeystoreAliasPwd".camelize(:lower) => keystore_alias_password,
+  }
+
+  begin
+    gradle(
+      task: "#{app_module}:bundle#{app_variant}Release",
+      print_command: false,
+      properties: signing_properties
+    )
+
+    successful = true
+    aab_path = Actions.lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
+    mapping_path = Actions.lane_context[SharedValues::GRADLE_MAPPING_TXT_OUTPUT_PATH]
+  rescue => e
+    UI.error(e)
+
+    successful = false
+    aab_path = nil
+    mapping_path = nil
+  end
+
+  BuildResult.new(successful, aab_path, mapping_path)
+end
+
 class BuildResult
   # We use attr_reader here so we dont have access to read the variables, and not to write them
   attr_reader :successful

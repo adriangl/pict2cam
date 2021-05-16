@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/adriangl/fastlane-plugin-huawei_appgallery_connect
-  revision: 4cf1be59a5c1fb2b1d219deaa46f5226da2358cf
-  specs:
-    fastlane-plugin-huawei_appgallery_connect (1.0.15)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -105,6 +99,7 @@ GEM
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
     fastlane-plugin-firebase_app_distribution (0.2.9)
+    fastlane-plugin-huawei_appgallery_connect (1.0.16)
     gh_inspector (1.1.3)
     google-apis-androidpublisher_v3 (0.2.0)
       google-apis-core (~> 0.1)
@@ -245,7 +240,7 @@ DEPENDENCIES
   activesupport
   fastlane
   fastlane-plugin-firebase_app_distribution
-  fastlane-plugin-huawei_appgallery_connect!
+  fastlane-plugin-huawei_appgallery_connect
   pry
   rubocop
   rubocop-require_tools

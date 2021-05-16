@@ -2,7 +2,7 @@
 require_relative "./models"
 
 def publish_apk_to_google_play_store(track, apk_paths, mapping_paths, package_name, upload_service_account_json_path)
-  UI.message("Publishing app to Google Play's #{track} track...")
+  UI.message("Publishing APK to Google Play's #{track} track...")
 
   begin
     supply(
@@ -18,6 +18,39 @@ def publish_apk_to_google_play_store(track, apk_paths, mapping_paths, package_na
       skip_upload_images: true,
       skip_upload_screenshots: true
     )
+    
+    published = true
+    version_name = get_google_play_store_published_version_name(track, package_name, upload_service_account_json_path)
+    version_code = get_google_play_store_published_version_code(track, package_name, upload_service_account_json_path)
+  rescue => e
+    UI.error(e)
+
+    published = false
+    version_name = nil
+    version_code = nil
+  end
+
+  PublishVersionResult.new(published, version_name, version_code)
+end
+
+def publish_aab_to_google_play_store(track, aab_paths, mapping_paths, package_name, upload_service_account_json_path)
+  UI.message("Publishing AAB to Google Play's #{track} track...")
+
+  begin
+    supply(
+      validate_only: false,
+      track: track.nil? ? "internal" : track,
+      aab_paths: aab_paths,
+      mapping_paths: mapping_paths,
+      package_name: package_name,
+      json_key: upload_service_account_json_path,
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+
     published = true
     version_name = get_google_play_store_published_version_name(track, package_name, upload_service_account_json_path)
     version_code = get_google_play_store_published_version_code(track, package_name, upload_service_account_json_path)

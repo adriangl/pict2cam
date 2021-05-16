@@ -186,6 +186,52 @@ platform :android do
       property_prefix)
   end
 
+  desc "Generates a release AAB build of the app"
+  desc ""
+  desc "Ensure that the apps' `signingConfig` blocks are defined and that they can be obtained from the Gradle project like this:"
+  desc "```groovy"
+  desc "project.property(\"releaseKeystorePath\")"
+  desc "project.property(\"releaseKeystorePwd\")"
+  desc "project.property(\"releaseKeystoreAlias\")"
+  desc "project.property(\"releaseKeystoreAliasPwd\")"
+  desc "```"
+  desc "If you add the `property_prefix` parameter, don't forget to include it in your key loading. For example, if you set `free` "
+  desc "as the prefix, you'll have the following project properties:"
+  desc "```groovy"
+  desc "project.property(\"freeReleaseKeystorePath\")"
+  desc "project.property(\"freeReleaseKeystorePwd\")"
+  desc "project.property(\"freeReleaseKeystoreAlias\")"
+  desc "project.property(\"freeReleaseKeystoreAliasPwd\")"
+  desc "```"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `app_module` - (Optional) The module to build. Defaults to `app`."
+  desc "* `app_variant` - (Optional) Comma separated list off the flavors that compose the variant of the app. Defaults to empty string."
+  desc "* `clean` - (Optional) Boolean that enables cleaning the project before running. Defaults to false."
+  desc "* `property_prefix` - (Optional) Prefix to add to keystore variables' names. Defaults to empty string."
+  desc ""
+  desc "Returns:"
+  desc "* a `BuildResult` object containing the generated AAB path and the Proguard Mapping file if generated"
+  lane :release_aab do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    app_module = options[:app_module] || "app"
+    app_variant = options[:app_variant] ? options[:app_variant].split(",").map { |s| s.strip.capitalize }.join : ""
+    clean_project = options[:clean] || false
+    property_prefix = options[:property_prefix] || ""
+
+    clean if clean_project
+
+    keys_data = get_keys_data
+    build_release_aab(app_module,
+      app_variant,
+      keys_data.upload_keystore_path,
+      keys_data.upload_keystore_password,
+      keys_data.upload_keystore_alias,
+      keys_data.upload_keystore_alias_password,
+      property_prefix)
+  end
+
   desc "Publishes an APK to the Google Play Store in the given track"
   desc ""
   desc "Options:"
@@ -210,6 +256,30 @@ platform :android do
       google_play_data.upload_service_account_json_path)
   end
 
+  desc "Publishes an AAB to the Google Play Store in the given track"
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `track` - The track to use when publishing."
+  desc "* `aab_paths` - Comma-separated list of absolute paths to the AABs to publish."
+  desc "* `mapping_paths` - Comma-separated list of absolute paths to the Proguard mapping paths to attach to the publication. Defaults to nil."
+  desc ""
+  desc "Returns:"
+  desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
+  lane :publish_aab_play_store do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    track = options.fetch(:track)
+    aab_paths = options.fetch(:aab_paths).split(",")
+    mapping_paths = options[:mapping_path]&.split(",")
+
+    google_play_data = get_google_play_data
+    publish_aab_to_google_play_store(track,
+      aab_paths,
+      mapping_paths,
+      google_play_data.package_name,
+      google_play_data.upload_service_account_json_path)
+  end
+
   desc "Publishes an APK to HUAWEI AppGallery."
   desc ""
   desc "Options:"
@@ -227,6 +297,28 @@ platform :android do
     huawei_data = get_huawei_data
     publish_apk_to_huawei_appgallery(submit_for_review,
       apk_path,
+      huawei_data.api_client_id,
+      huawei_data.api_client_secret,
+      huawei_data.app_id)
+  end
+
+  desc "Publishes an AAB to HUAWEI AppGallery."
+  desc ""
+  desc "Options:"
+  desc "* `app_name` - Name of the app in the keysafe."
+  desc "* `submit_for_review` - (Optional) Whether or not submit for review. Defaults to false."
+  desc "* `aab_path` - Absolute path to the AAB to publish."
+  desc ""
+  desc "Returns:"
+  desc "* a `PublishVersionResult` object containing if the publication was published and the version name of the published app"
+  lane :publish_aab_appgallery do |options|
+    # app_name is not read here, but in before_all block, so we need it anyway
+    submit_for_review = options[:submit_for_review] || false
+    aab_path = options.fetch(:aab_path)
+
+    huawei_data = get_huawei_data
+    publish_aab_to_huawei_appgallery(submit_for_review,
+      aab_path,
       huawei_data.api_client_id,
       huawei_data.api_client_secret,
       huawei_data.app_id)
