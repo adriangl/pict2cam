@@ -36,7 +36,7 @@ buildscript {
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
         classpath "com.gladed.androidgitversion:gradle-android-git-version:0.4.14"
-        classpath "com.github.ben-manes:gradle-versions-plugin:0.36.0"
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.38.0"
         classpath "com.github.bq:poeditor-android-gradle-plugin:1.4.2"
         classpath "com.github.triplet.gradle:play-publisher:3.0.0"
 
