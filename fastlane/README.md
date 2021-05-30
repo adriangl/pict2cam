@@ -88,7 +88,7 @@ Options:
 
 Returns:
 
-* `BuildResult` object containing the generated APK path and the Proguard Mapping file if generated
+* `BuildResult` object containing the generated APK path and the Proguard mapping file if generated
 ### android tests_apk
 ```
 fastlane android tests_apk
@@ -111,7 +111,7 @@ Options:
 
 Returns:
 
-* a `BuildResult` object containing the generated APK path and the Proguard Mapping file if generated
+* a `BuildResult` object containing the generated APK path and the Proguard mapping file if generated
 ### android release_apk
 ```
 fastlane android release_apk
@@ -225,12 +225,12 @@ Options:
 
 Returns:
 
-* a `BuildResult` object containing the generated AAB path and the Proguard Mapping file if generated
-### android publish_apk_play_store
+* a `BuildResult` object containing the generated AAB path and the Proguard mapping file if generated
+### android publish_artifact_play_store
 ```
-fastlane android publish_apk_play_store
+fastlane android publish_artifact_play_store
 ```
-Publishes an APK to the Google Play Store in the given track
+Publishes artifacts (APKs or AABs) to the Google Play Store in the given track
 
 
 
@@ -240,20 +240,22 @@ Options:
 
 * `track` - The track to use when publishing.
 
-* `apk_paths` - Comma-separated list of absolute paths to the APKs to publish.
+* `artifact_type` - The artifact type to publish. Values are `APK` or `AAB.
 
-* `mapping_paths` - Comma-separated list of absolute paths to the Proguard mapping paths to attach to the publication. Defaults to nil.
+* `artifact_paths` - Comma-separated list of absolute paths to the artifacts to publish
+
+* `mapping_paths` - Comma-separated list of absolute paths to the Proguard mapping files to attach to the publication. Defaults to nil.
 
 
 
 Returns:
 
 * a `PublishVersionResult` object containing if the publication was published and the version name of the published app
-### android publish_aab_play_store
+### android publish_artifact_appgallery
 ```
-fastlane android publish_aab_play_store
+fastlane android publish_artifact_appgallery
 ```
-Publishes an AAB to the Google Play Store in the given track
+Publishes artifacts (APKs or AABs) to HUAWEI AppGallery.
 
 
 
@@ -261,53 +263,11 @@ Options:
 
 * `app_name` - Name of the app in the keysafe.
 
-* `track` - The track to use when publishing.
+* `artifact_type` - The artifact type to publish. Values are `APK` or `AAB.
 
-* `aab_paths` - Comma-separated list of absolute paths to the AABs to publish.
-
-* `mapping_paths` - Comma-separated list of absolute paths to the Proguard mapping paths to attach to the publication. Defaults to nil.
-
-
-
-Returns:
-
-* a `PublishVersionResult` object containing if the publication was published and the version name of the published app
-### android publish_apk_appgallery
-```
-fastlane android publish_apk_appgallery
-```
-Publishes an APK to HUAWEI AppGallery.
-
-
-
-Options:
-
-* `app_name` - Name of the app in the keysafe.
+* `artifact_path` - Absolute path to the artifact to publish
 
 * `submit_for_review` - (Optional) Whether or not submit for review. Defaults to false.
-
-* `apk_path` - Absolute path to the APK to publish.
-
-
-
-Returns:
-
-* a `PublishVersionResult` object containing if the publication was published and the version name of the published app
-### android publish_aab_appgallery
-```
-fastlane android publish_aab_appgallery
-```
-Publishes an AAB to HUAWEI AppGallery.
-
-
-
-Options:
-
-* `app_name` - Name of the app in the keysafe.
-
-* `submit_for_review` - (Optional) Whether or not submit for review. Defaults to false.
-
-* `aab_path` - Absolute path to the AAB to publish.
 
 
 
