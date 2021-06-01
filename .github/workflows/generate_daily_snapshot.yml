@@ -54,7 +54,7 @@ jobs:
         if: ${{ steps.check-new-commits.outputs.has-new-commits != 'true' }}
         uses: andymckay/cancel-action@0.2
       - name: Restore caches
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v2.1.6
         with:
           path: |
             ~/.gradle/caches
