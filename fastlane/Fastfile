@@ -14,23 +14,8 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-# Import lanes from remote repo
-cache_path="/tmp/fastlane"
-repo_url = "git@github.com:adriangl/android-fastlane-files.git"
-repo_name = repo_url.split("/")[-1]
-import_from_git(
-  url: repo_url,
-  branch: "master",
-  path: "fastlane/Fastfile",
-  cache_path: cache_path
-)
+default_platform(:android)
 
-Dir.chdir("..") do
-  imported_gemfile_path = File.join(cache_path, repo_name, "Gemfile")
-
-  File.open("Gemfile.local", "w") do |f|
-    f.write("eval_gemfile(\"#{imported_gemfile_path}\")") if File.exist?(imported_gemfile_path)
-  end
-  sh("bundle update --gemfile=Gemfile.local")
-  sh("rm Gemfile.local Gemfile.local.lock")
+platform :android do 
+  
 end
