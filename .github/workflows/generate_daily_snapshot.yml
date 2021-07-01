@@ -107,7 +107,7 @@ jobs:
         run: |
           ./scripts/ci/deploy/generate_build.sh "$MODULE" "$FLAVOR" "$RELEASE_TRACK"
       - name: Store build artifacts into workspace
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v2.2.4
         with:
           name: release
           path: release/
