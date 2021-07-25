@@ -43,6 +43,8 @@ platform :android do
       artifact_type: options.fetch(:artifact_type)
     )
 
+    sh("git status")
+
     if generate_internal_result.successful
       UI.header("Create GitHub pre-release")
       changelog = changelog_from_git_commits(
