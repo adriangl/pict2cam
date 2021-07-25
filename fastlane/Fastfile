@@ -53,7 +53,7 @@ platform :android do
 
       set_github_release(
         repository_name: options.fetch(:github_repository_name),
-        api_token: options.fetch(:github_api_token),
+        api_bearer: options.fetch(:github_api_token),
         tag_name: new_tag,
         name: new_tag,
         description: changelog,
