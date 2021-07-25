@@ -17,8 +17,13 @@ jobs:
     name: Promote the internal version of the app to alpha
     runs-on: ubuntu-latest
     needs: cancel_previous
-    
+
     steps:
+      - name: Checkout develop
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          
       - name: Install fastlane-plugin-android_build_tools deploy key
         uses: shimataro/ssh-key-action@v2.3.0
         with:
