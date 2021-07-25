@@ -211,7 +211,7 @@ dependencies {
 
     // Use jUnit5 in unit tests
     testImplementation "junit:junit:4.13.2"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.1"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"
 
     androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
