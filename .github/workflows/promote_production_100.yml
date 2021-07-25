@@ -1,9 +1,6 @@
-name: Generate daily snapshot
+name: Promote production version to 100%
 
 on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '00 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -16,29 +13,17 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-  generate_daily_snapshot:
-    name: Generate daily snapshot from develop
+  promote_proudction_to_100:
+    name: Promote production version to 100%
     runs-on: ubuntu-latest
     needs: cancel_previous
-    
+
     steps:
       - name: Checkout develop
         uses: actions/checkout@v2
         with:
           ref: develop
           fetch-depth: 0 # Whole repo history
-
-      - name: Check if there has been new commits in the last 24 hours
-        id: check-new-commits
-        uses: adriangl/check-new-commits-action@v1.0.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: develop
-          seconds: 86400 # one day
-
-      - name: Cancel job if no new commits have been found in the last 24 hours
-        if: ${{ steps.check-new-commits.outputs.has-new-commits != 'true' }}
-        uses: andymckay/cancel-action@0.2
 
       - name: Fetch all tags
         run: git fetch origin +refs/tags/*:refs/tags/*
@@ -79,12 +64,10 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: replace
 
-      - name: Generate daily snapshot and publish it
+      - name: Promote production version to 100%
         env:
           KEYSAFE_REPO_URL: ${{ secrets.KEYSAFE_REPO_URL }}
           APP_KEYSAFE_NAME: ${{ secrets.APP_KEYSAFE_NAME }}
           APP_KEYSAFE_PASSWORD: ${{ secrets.APP_KEYSAFE_PASSWORD }}
-          GITHUB_REPO: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          bundle exec fastlane generate_daily_snapshot app_keysafe_name:"$APP_KEYSAFE_NAME" app_keysafe_password:"$APP_KEYSAFE_PASSWORD" artifact_type:AAB github_repository_name:"$GITHUB_REPO" github_api_token:"$GITHUB_TOKEN"
+          bundle exec fastlane promote_to_production_100 app_keysafe_name:"$APP_KEYSAFE_NAME" app_keysafe_password:"$APP_KEYSAFE_PASSWORD" artifact_type:AAB
