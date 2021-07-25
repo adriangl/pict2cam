@@ -1,8 +1,8 @@
 GIT
   remote: git@github.com:adriangl/fastlane-plugin-android_build_tools
-  revision: 481cb93a0bde650d23068bca3d42af367d66b848
+  revision: 5207b4a48aaea30e1aafe0c529b8d1b5cfa61d15
   specs:
-    fastlane-plugin-android_build_tools (0.1.0)
+    fastlane-plugin-android_build_tools (1.0.0)
       activesupport
       fastlane-plugin-firebase_app_distribution
       fastlane-plugin-huawei_appgallery_connect
@@ -48,7 +48,7 @@ GEM
       highline (~> 2.0.0)
     concurrent-ruby (1.1.9)
     declarative (0.0.20)
-    digest-crc (0.6.3)
+    digest-crc (0.6.4)
       rake (>= 12.0.0, < 14.0.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -225,7 +225,8 @@ GEM
       CFPropertyList
       naturally
     terminal-notifier (2.0.0)
-    terminal-table (1.6.0)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     trailblazer-option (0.1.1)
     tty-cursor (0.7.1)
     tty-screen (0.8.1)
@@ -237,7 +238,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    unicode-display_width (2.0.0)
+    unicode-display_width (1.7.0)
     webrick (1.7.0)
     word_wrap (1.0.0)
     xcodeproj (1.20.0)

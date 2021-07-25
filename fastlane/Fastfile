@@ -30,6 +30,8 @@ platform :android do
     tag_flow_result = tag_flow(
       increment: "patch",
       push_to_repo: true,
+      committer_name: "github-actions[bot]",
+      committer_email: "41898282+github-actions[bot]@users.noreply.github.com"
     )
 
     new_tag = tag_flow_result[:version]
