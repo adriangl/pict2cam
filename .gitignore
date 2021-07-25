@@ -209,7 +209,8 @@ release/
 keysafe/
 
 # Ruby gems install folder
-.gems
+vendor
+.bundle
 
 # Secrets
 .env

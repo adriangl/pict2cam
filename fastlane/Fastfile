@@ -24,8 +24,6 @@ platform :android do
   desc "[String] github_repository_name: GitHub repository name"
   desc "[String] github_api_token: GitHub API token that can publish releases"
   lane :generate_daily_snapshot do |options|
-    sh("git status")
-
     UI.header("Generate new tag for the snapshot")
     current_tag = last_git_tag
 
@@ -38,16 +36,12 @@ platform :android do
 
     new_tag = tag_flow_result[:version]
 
-    sh("git status")
-
     UI.header("Generate snapshot")
     generate_internal_result = generate_internal(
       app_name: options.fetch(:app_keysafe_name),
       app_password: options.fetch(:app_keysafe_password),
       artifact_type: options.fetch(:artifact_type)
     )
-
-    sh("git status")
 
     if generate_internal_result.successful
       UI.header("Create GitHub pre-release")
