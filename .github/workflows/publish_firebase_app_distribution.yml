@@ -18,18 +18,18 @@ on:
       tester_emails:
         description: Comma separated list of tester e-mails to add
         required: false
-      tester_emails:
+      tester_groups:
         description: Comma separated list of tester groups (by ID) to add
         required: false
       release_notes:
-        description: Release notes for the disitribution
+        description: Release notes for the distribution
         required: true
 
 jobs:
   cancel_previous:
     name: Cancel previous runs
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.0
@@ -44,6 +44,11 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Whole repo history
+
+      - name: Fetch all tags
+        run: git fetch origin +refs/tags/*:refs/tags/*
 
       - name: Install fastlane-plugin-android_build_tools deploy key
         uses: shimataro/ssh-key-action@v2.3.0
@@ -90,5 +95,5 @@ jobs:
           bundle exec fastlane run create_firebase_app_distribution_release app_name:"$APP_KEYSAFE_NAME" app_password:"$APP_KEYSAFE_PASSWORD" \
           artifact_type:"${{ github.event.inputs.artifact_type }}" \
           app_module:"${{ github.event.inputs.module }}" app_build_type:"${{ github.event.inputs.build_type }}" \
-          tester_emails:"${{ github.event.inputs.tester_emails }}" tester_groups:"${{ github.event.inputs.tester_groups }}"\
+          tester_emails:"${{ github.event.inputs.tester_emails }}" tester_groups:"${{ github.event.inputs.tester_groups }}" \
           release_notes:"${{ github.event.inputs.release_notes }}"
