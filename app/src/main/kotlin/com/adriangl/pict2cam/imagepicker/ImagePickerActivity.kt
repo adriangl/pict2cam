@@ -107,6 +107,8 @@ class ImagePickerActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>,
                                             grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         when (requestCode) {
             WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE ->
                 if (grantResults.getOrNull(0) == PackageManager.PERMISSION_GRANTED) {
@@ -180,6 +182,8 @@ class ImagePickerActivity : AppCompatActivity() {
 
     private fun openImageCropper(imageUri: Uri, outputUri: Uri) {
         CropImage.activity(imageUri)
+                // Set crop to full size by default
+                .setInitialCropWindowPaddingRatio(0f)
                 // Image quality
                 .setOutputCompressFormat(ImageConstants.DEFAULT_COMPRESS_FORMAT)
                 .setOutputCompressQuality(ImageConstants.DEFAULT_IMAGE_QUALITY)
