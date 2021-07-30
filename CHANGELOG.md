@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - No security issues fixed!
 - 
-## [1.0.52] - 2021-07-26
+## [1.0.53] - 2021-07-30
 ### Added
 - Set crop area to full size by default
 
@@ -40,8 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit.
 
-[Unreleased]: https://github.com/adriangl/pict2cam/compare/1.0.52...HEAD
-[1.0.52]: https://github.com/adriangl/pict2cam/compare/1.0.27...1.0.52
+[Unreleased]: https://github.com/adriangl/pict2cam/compare/1.0.53...HEAD
+[1.0.53]: https://github.com/adriangl/pict2cam/compare/1.0.27...1.0.53
 [1.0.27]: https://github.com/adriangl/pict2cam/compare/1.0.18...1.0.27
 [1.0.18]: https://github.com/adriangl/pict2cam/compare/1.0.0...1.0.18
 [1.0.0]: https://github.com/adriangl/pict2cam/compare/0.1.0...1.0.0
