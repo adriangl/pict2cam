@@ -51,13 +51,15 @@ platform :android do
         merge_commit_filtering: "exclude_merges"
       )
 
+      # Since we can't do much with the AAB, we'll upload the universal APK to GitHub. In case of generating APKs, the universal
+      # APK would be the same APK as in the build.
       set_github_release(
         repository_name: options.fetch(:github_repository_name),
         api_bearer: options.fetch(:github_api_token),
         tag_name: new_tag,
         name: new_tag,
         description: changelog,
-        upload_assets: [generate_internal_result.build_result.artifact_path, generate_internal_result.build_result.mapping_path].compact,
+        upload_assets: [generate_internal_result.universal_apk_artifact, generate_internal_result.build_result.mapping_path].compact,
         is_prerelease: true
       )
     else
