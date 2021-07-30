@@ -19,9 +19,10 @@ The app provides the following features:
 * Crop picked images before feeding them to the app that requires a camera app
 
 ## Downloads
-You can get it from [Google Play][google-play-link] or grab the latest stable or bleeding edge release from the [Releases][releases-page] page.
+You can get it from [Google Play][google-play-link], [HUAWEI AppGallery][huawei-appgallery-link] or grab the latest stable or bleeding edge release from the [Releases][releases-page] page.
 
-<a href="https://play.google.com/store/apps/details?id=com.adriangl.pict2cam"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" width="250px"></a>
+<a href="https://play.google.com/store/apps/details?id=com.adriangl.pict2cam&utm_source=GitHub&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://i.imgur.com/r79AgnI.png" height="50px"/></a>
+<a href="https://appgallery.cloud.huawei.com/ag/n/app/C104247923?channelId=GitHub&id=54a602f892094969860f32b3f7dd2f90&s=1EA9B1B860B459C3736D4C98F6614B300E83DCA7B1CFE365A437782CE2B1A361&detailType=0&v="><img src="https://i.imgur.com/BNLWW1C.png" alt="Explore it on HUAWEI AppGallery" height="50px"></a>
 
 ## Contributing
 Refer to the [contributing guide](CONTRIBUTING.md) if you want to contribute to the project!
@@ -47,5 +48,6 @@ limitations under the License.
 ```
 
 [google-play-link]:https://play.google.com/store/apps/details?id=com.adriangl.pict2cam
+[huawei-appgallery-link]:https://appgallery.cloud.huawei.com/ag/n/app/C104247923
 [releases-page]:https://github.com/adriangl/pict2cam/releases
 [android-11-google-restrictions]:https://developer.android.com/about/versions/11/behavior-changes-11#media-capture
