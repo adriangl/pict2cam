@@ -16,10 +16,10 @@
 
 <resources>
     <string name="app_name">Pict2Cam</string>
-    <string name="appintro_title">AppIntro</string>
-    <string name="appintro_description">AppIntro is an Android Library that helps you build a cool carousel intro for your App.</string>
     <string name="android_image_cropper_title">Android Image Cropper</string>
     <string name="android_image_cropper_description">Powerful, customizable, optimized and simple image cropping library for Android.</string>
+    <string name="android_image_cropper_link_url">https://github.com/ArthurHub/Android-Image-Cropper</string>
     <string name="freevector_title">FreeVector vector assets</string>
     <string name="freevector_description">The Ultimate Collection of Free Vector Art, Graphics and Illustrations</string>
+    <string name="freevector_link_url">https://freevector.com/</string>
 </resources>

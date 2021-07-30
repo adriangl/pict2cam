@@ -1,2 +1,0 @@
-Pict2Cam es una cámara simulada para Android que puedes utilizar para elegir imágenes cuando una aplicación te pida tomar fotos usando una aplicación de cámara.
-También incluye un modo edición para recortar tus imágenes antes de enviarlas.

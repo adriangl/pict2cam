@@ -19,19 +19,20 @@ apply plugin: "com.github.ben-manes.versions"
 
 buildscript {
     ext {
-        kotlin_version = "1.5.21"
-        detekt_version = "1.9.1"
+        kotlin_version = "1.5.10" // Forced by Jetpack Compose 1.0.0
+        detekt_version = "1.18.1"
     }
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        jcenter() // needed by image cropper, sadly
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://jitpack.io" }
     }
     
     dependencies {
-        classpath "com.android.tools.build:gradle:4.2.2"
+        classpath "com.android.tools.build:gradle:7.0.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
@@ -48,7 +49,8 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        jcenter() // needed by image cropper, sadly
         maven { url "https://jitpack.io" }
     }
 }

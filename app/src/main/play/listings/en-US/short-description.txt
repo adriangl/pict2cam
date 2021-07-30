@@ -1,1 +1,0 @@
-Fake camera app to pick images from your device
