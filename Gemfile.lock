@@ -1,8 +1,8 @@
 GIT
   remote: git@github.com:adriangl/fastlane-plugin-android_build_tools
-  revision: de0ae694ff26107df8821030a5c45e47d9b10789
+  revision: 7e5cc81608bb058063580f31ef2801def653ed62
   specs:
-    fastlane-plugin-android_build_tools (1.3.1)
+    fastlane-plugin-android_build_tools (1.3.2)
       activesupport
       down
       fastlane-plugin-firebase_app_distribution
