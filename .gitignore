@@ -48,6 +48,7 @@ captures/
 .idea/caches
 .idea/compiler.xml
 .idea/assetWizardSettings.xml
+.idea/deploymentTargetDropDown.xml
 
 projectFilesBackup/.idea/
 

@@ -17,6 +17,38 @@
 default_platform(:android)
 
 platform :android do
+  desc "Tests PRs and checks for integrity"
+  desc "[String] app_keysafe_name: Name of the application in the keysafe"
+  desc "[String] app_keysafe_password: Password of the application in the keysafe"
+  desc "[String] artifact_type: Artifact to generate: APK or AAB"
+  lane :validate_pr do |options|
+    app_keysafe_name = options.fetch(:app_keysafe_name)
+    app_keysafe_password = options.fetch(:app_keysafe_password)
+    artifact_type = options.fetch(:artifact_type)
+
+    UI.header("Run detekt")
+
+    gradle(
+      task: "detekt"
+    )
+
+    UI.header("Test the PR")
+
+    tests_result = build_and_test_pr(
+      app_name: app_keysafe_name,
+      app_password: app_keysafe_password,
+      artifact_type: artifact_type
+    )
+
+    if tests_result.passed
+      UI.success("Nice! Tests pass!")
+    else
+      UI.crash!("Tests didn't pass. Possible causes:\n"\
+      "Error(s): #{tests_result.error}\n"\
+      "Did tests pass? #{tests_result.passed}\n")
+    end
+  end
+
   desc "Generates daily snapshot and uploads it to GitHub as a pre-release"
   desc "[String] app_keysafe_name: Name of the application in the keysafe"
   desc "[String] app_keysafe_password: Password of the application in the keysafe"
@@ -24,6 +56,12 @@ platform :android do
   desc "[String] github_repository_name: GitHub repository name"
   desc "[String] github_api_token: GitHub API token that can publish releases"
   lane :generate_daily_snapshot do |options|
+    app_keysafe_name = options.fetch(:app_keysafe_name)
+    app_keysafe_password = options.fetch(:app_keysafe_password)
+    artifact_type = options.fetch(:artifact_type)
+    github_repository_name = options.fetch(:github_repository_name)
+    github_api_token = options.fetch(:github_api_token)
+
     UI.header("Generate new tag for the snapshot")
     current_tag = last_git_tag
 
@@ -38,9 +76,9 @@ platform :android do
 
     UI.header("Generate snapshot")
     generate_internal_result = generate_internal(
-      app_name: options.fetch(:app_keysafe_name),
-      app_password: options.fetch(:app_keysafe_password),
-      artifact_type: options.fetch(:artifact_type)
+      app_name: app_keysafe_name,
+      app_password: app_keysafe_password,
+      artifact_type: artifact_type
     )
 
     if generate_internal_result.successful
@@ -51,15 +89,21 @@ platform :android do
         merge_commit_filtering: "exclude_merges"
       )
 
-      # Since we can't do much with the AAB, we'll upload the universal APK to GitHub. In case of generating APKs, the universal
-      # APK would be the same APK as in the build.
+      # We'll upload the universal APK and the AAB (if any) to GitHub. In case of generating APKs, the universal
+      # APK would be the same APK as in the build. Also upload the mapping file.
+      upload_assets = [
+        generate_internal_result.universal_apk_artifact,
+        generate_internal_result.build_result.artifact_path,
+        generate_internal_result.build_result.mapping_path,
+      ].compact.uniq
+
       set_github_release(
-        repository_name: options.fetch(:github_repository_name),
-        api_bearer: options.fetch(:github_api_token),
+        repository_name: github_repository_name,
+        api_bearer: github_api_token,
         tag_name: new_tag,
         name: new_tag,
         description: changelog,
-        upload_assets: [generate_internal_result.universal_apk_artifact, generate_internal_result.build_result.mapping_path].compact,
+        upload_assets: upload_assets,
         is_prerelease: true
       )
     else
@@ -71,43 +115,18 @@ platform :android do
     end
   end
 
-  desc "Tests PRs and checks for integrity"
-  desc "[String] app_keysafe_name: Name of the application in the keysafe"
-  desc "[String] app_keysafe_password: Password of the application in the keysafe"
-  desc "[String] artifact_type: Artifact to generate: APK or AAB"
-  lane :validate_pr do |options|
-    UI.header("Run detekt")
-
-    gradle(
-      task: "detekt"
-    )
-
-    UI.header("Test the PR")
-
-    tests_result = build_and_test_pr(
-      app_name: options.fetch(:app_keysafe_name),
-      app_password: options.fetch(:app_keysafe_password),
-      artifact_type: options.fetch(:artifact_type)
-    )
-
-    if tests_result.passed
-      UI.success("Nice! Tests pass!")
-    else
-      UI.crash!("Tests didn't pass. Possible causes:\n"\
-      "Error(s): #{tests_result.error}\n"\
-      "Did tests pass? #{tests_result.passed}\n")
-    end
-  end
-
   desc "Promote current internal build to alpha track"
   desc "[String] app_keysafe_name: Name of the application in the keysafe"
   desc "[String] app_keysafe_password: Password of the application in the keysafe"
   lane :promote_to_alpha do |options|
+    app_keysafe_name = options.fetch(:app_keysafe_name)
+    app_keysafe_password = options.fetch(:app_keysafe_password)
+
     UI.header("Promote to alpha")
 
     promote_result = promote_internal_to_alpha(
-      app_name: options.fetch(:app_keysafe_name),
-      app_password: options.fetch(:app_keysafe_password)
+      app_name: app_keysafe_name,
+      app_password: app_keysafe_password
     )
 
     if promote_result.published
@@ -122,11 +141,14 @@ platform :android do
   desc "[String] app_keysafe_name: Name of the application in the keysafe"
   desc "[String] app_keysafe_password: Password of the application in the keysafe"
   lane :promote_to_production_20 do |options|
+    app_keysafe_name = options.fetch(:app_keysafe_name)
+    app_keysafe_password = options.fetch(:app_keysafe_password)
+
     UI.header("Promote to production 20%")
 
     promote_result = promote_alpha_to_production_20(
-      app_name: options.fetch(:app_keysafe_name),
-      app_password: options.fetch(:app_keysafe_password)
+      app_name: app_keysafe_name,
+      app_password: app_keysafe_password
     )
 
     if promote_result.published
@@ -140,13 +162,21 @@ platform :android do
   desc "Promote current stged production build to production track with 100% rollout"
   desc "[String] app_keysafe_name: Name of the application in the keysafe"
   desc "[String] app_keysafe_password: Password of the application in the keysafe"
-  desc "[String] artifact_type: Artifact to generate for HUAWEI AppGallery: APK or AAB"
+  desc "[String] artifact_type: Artifact to upload to HUAWEI AppGallery: APK or AAB"
+  desc "[String] github_repository_name: GitHub repository name"
+  desc "[String] github_api_token: GitHub API token that can publish releases"
   lane :promote_to_production_100 do |options|
+    app_keysafe_name = options.fetch(:app_keysafe_name)
+    app_keysafe_password = options.fetch(:app_keysafe_password)
+    artifact_type = options.fetch(:artifact_type)
+    github_repository_name = options.fetch(:github_repository_name)
+    github_api_token = options.fetch(:github_api_token)
+
     UI.header("Promote to production 100% in Google Play")
 
     promote_result = promote_production_to_100(
-      app_name: options.fetch(:app_keysafe_name),
-      app_password: options.fetch(:app_keysafe_password)
+      app_name: app_keysafe_name,
+      app_password: app_keysafe_password
     )
 
     if promote_result.published
@@ -158,31 +188,51 @@ platform :android do
       return
     end
 
-    # Now here's the tricky part: compiling the same version that is published to 100% and uploading it to
+    # Now here's the tricky part: we're going to download the version from GitHub release and upload it to
     # HUAWEI AppGallery
 
-    UI.header("Generate release in HUAWEI AppGallery")
+    UI.header("Upload release in HUAWEI AppGallery")
 
-    # Move to tag in repo. The version name MUST match the tag in the repo
     version_name = promote_result.publish_result.version_name
-    sh("git checkout #{version_name}")
 
-    generate_result = generate_release_for_appgallery(
-      app_name: options.fetch(:app_keysafe_name),
-      app_password: options.fetch(:app_keysafe_password),
-      artifact_type: options.fetch(:artifact_type)
+    latest_release = get_github_release(
+      url: github_repository_name,
+      api_bearer: github_api_token,
+      version: version_name
     )
 
-    if generate_result.successful
-      UI.success("Nice! Your app is published to the production track with 100% rollout in HUAWEI AppGallery!")
-    else
-      UI.crash!("App wasn't published to HUAWEI AppGallery. Possible causes:\n"\
-      "Error(s): #{generate_result.error}\n"\
-      "Did tests pass? #{generate_result.tests_result.passed}\n"\
-      "Was build successful? #{generate_result.successful}\n"\
-      "Was build published? #{generate_result.publish_result.published}")
+    # If we have a release matching the published version, try to get the asset linked to the brand and artifact type
+    if latest_release
+      artifact_asset = latest_release["assets"].select do |asset|
+        asset_name = asset["name"].downcase
+        asset_name.include?(app_keysafe_name.downcase) && asset_name.include?(artifact_type.downcase)
+      end
 
-      return
+      if !artifact_asset.nil? && !artifact_asset.empty?
+        artifact_path = "/tmp/#{artifact_asset[0]["name"]}"
+        artifact_asset_url = artifact_asset[0]["url"]
+
+        # Download the release asset
+        download_asset_from_github_release(
+          asset_url: artifact_asset_url,
+          destination_path: artifact_path,
+          api_token: github_api_token
+        )
+
+        huawei_upload_result = upload_artifact_to_appgallery(
+          app_name: app_keysafe_name,
+          app_password: app_keysafe_password,
+          artifact_type: artifact_type
+        )
+
+        if huawei_upload_result.published
+          UI.success("Nice! Your app is published to the production track with 100% rollout in HUAWEI AppGallery!")
+        else
+          UI.crash!("Upload of #{app_keysafe_name.capitalize} to HUAWEI AppGallery failed")
+        end
+      else
+        UI.crash!("No release found for version #{version_name}, so upload to HUAWEI AppGallery has to be aborted")
+      end
     end
   end
 end

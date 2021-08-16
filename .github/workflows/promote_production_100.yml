@@ -69,5 +69,7 @@ jobs:
           KEYSAFE_REPO_URL: ${{ secrets.KEYSAFE_REPO_URL }}
           APP_KEYSAFE_NAME: ${{ secrets.APP_KEYSAFE_NAME }}
           APP_KEYSAFE_PASSWORD: ${{ secrets.APP_KEYSAFE_PASSWORD }}
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bundle exec fastlane promote_to_production_100 app_keysafe_name:"$APP_KEYSAFE_NAME" app_keysafe_password:"$APP_KEYSAFE_PASSWORD" artifact_type:AAB
+          bundle exec fastlane promote_to_production_100 app_keysafe_name:"$APP_KEYSAFE_NAME" app_keysafe_password:"$APP_KEYSAFE_PASSWORD" artifact_type:AAB github_repository_name:"$GITHUB_REPO" github_api_token:"$GITHUB_TOKEN"
