@@ -222,6 +222,7 @@ platform :android do
         huawei_upload_result = upload_artifact_to_appgallery(
           app_name: app_keysafe_name,
           app_password: app_keysafe_password,
+          artifact_path: artifact_path,
           artifact_type: artifact_type
         )
 
