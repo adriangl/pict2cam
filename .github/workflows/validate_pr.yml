@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install fastlane-plugin-android_build_tools deploy key
-        uses: shimataro/ssh-key-action@v2.3.0
+        uses: shimataro/ssh-key-action@v2.3.1
         with:
           key: ${{ secrets.ANDROID_BUILD_TOOLS_DEPLOY_KEY }}
           name: id_rsa
@@ -53,7 +53,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Install keysafe deploy key
-        uses: shimataro/ssh-key-action@v2.3.0
+        uses: shimataro/ssh-key-action@v2.3.1
         with:
           key: ${{ secrets.KEYSAFE_DEPLOY_KEY }}
           name: id_rsa
