@@ -57,7 +57,7 @@ jobs:
           java-version: 8
 
       - name: Set-up and configure Ruby
-        uses: ruby/setup-ruby@v1.78.0
+        uses: ruby/setup-ruby@v1.81.0
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
