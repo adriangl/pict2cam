@@ -25,8 +25,11 @@
     <color name="secondaryTextColor">#ffffff</color>
 
     <!-- Welcome screens -->
-    <color name="welcome_step_1_background_color">#7986CB</color>
-    <color name="welcome_step_2_background_color">#4FC3F7</color>
-    <color name="welcome_step_3_background_color">#4DD0E1</color>
-    <color name="welcome_step_4_background_color">#4DB6AC</color>
+    <color name="onboarding_welcome_background_color">#7986CB</color>
+    <color name="onboarding_pick_intent_background_color">#4FC3F7</color>
+    <color name="onboarding_crop_image_background_color">#4DD0E1</color>
+    <color name="onboarding_instant_messaging_apps_background_color">#4DB6AC</color>
+    <color name="onboarding_credits_background_color">#FF9800</color>
+    <color name="onboarding_android_11_background_color">#F44336</color>
+    <color name="onboarding_credits_card_background_color">#FFCC80</color>
 </resources>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Adrián García
+ * Copyright 2021 Adrián García
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.adriangl.pict2cam.utils
+package com.adriangl.pict2cam.extensions
 
-import android.graphics.Bitmap
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 
 /**
- * Basic image constants used in the app.
+ * Opens a given URL.
  */
-object ImageConstants {
-    const val DEFAULT_IMAGE_QUALITY = 90
-    val DEFAULT_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG
+fun Context.openWebsite(url: String) {
+    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+    startActivity(browserIntent)
 }

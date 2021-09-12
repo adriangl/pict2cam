@@ -19,7 +19,9 @@
     package="com.adriangl.pict2cam">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <!--
         Note about requestLegacyExternalStorage: since the app will make no sense from Android 11
@@ -32,15 +34,16 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Activities -->
         <activity
-            android:name=".welcome.WelcomeActivity"
-            android:label="@string/app_name">
+            android:name=".onboarding.OnboardingActivity"
+            android:exported="true"
+            android:label="@string/app_help_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -49,6 +52,7 @@
 
         <activity
             android:name=".imagepicker.ImagePickerActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.ImagePicker">
             <intent-filter>

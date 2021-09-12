@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Adrián García
+ * Copyright 2021 Adrián García
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package com.adriangl.pict2cam.utils
+package com.adriangl.pict2cam.ui.extensions
 
-import android.graphics.Bitmap
+import androidx.compose.ui.text.AnnotatedString
 
 /**
- * Basic image constants used in the app.
+ * Converts a String to an AnnotatedString.
  */
-object ImageConstants {
-    const val DEFAULT_IMAGE_QUALITY = 90
-    val DEFAULT_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG
-}
+fun String.toAnnotatedString() = AnnotatedString(this)

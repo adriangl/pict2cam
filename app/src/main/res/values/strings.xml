@@ -1,16 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Onboarding strings -->
-    <string name="onboarding_step_1_title">"Welcome to Pict2Cam!"</string>
-    <string name="onboarding_step_1_description">"Pict2Cam allows you to pick any image from your device whenever an application wants to use your camera. Let's check how it works!"</string>
-    <string name="onboarding_step_2_title">"How to use Pict2Cam"</string>
-    <string name="onboarding_step_2_description">"Open the app that requires you to use an external camera and select Pict2Cam when the prompt to take a picture appears"</string>
-    <string name="onboarding_step_3_title">"How to use Pict2Cam"</string>
-    <string name="onboarding_step_3_description">"Choose your photo, crop it… And you're done!"</string>
-    <string name="onboarding_step_4_title">"Things to note"</string>
-    <string name="onboarding_step_4_description">"This app may not work in messaging apps, as they usually bundle their custom cameras within them"</string>
-    <string name="onboarding_step_5_title">"Credits"</string>
-    <string name="onboarding_step_5_description">"This app would not be possible without the following resources:"</string>
+    <string name="onboarding_welcome_title">"Welcome to Pict2Cam!"</string>
+    <string name="onboarding_welcome_description">"Pict2Cam allows you to pick any image from your device whenever an application wants to use your camera. Let's check how it works!"</string>
+    <!-- Fuzzy -->
+    <string name="onboarding_pick_intent_title">"How to use Pict2Cam"</string>
+    <string name="onboarding_pick_intent_description">"Open the app that requires you to use an external camera and select Pict2Cam when the prompt to take a picture appears"</string>
+    <string name="onboarding_crop_image_title">"How to use Pict2Cam"</string>
+    <string name="onboarding_crop_image_description">"Choose your photo, crop it… And you're done!"</string>
+    <string name="onboarding_instant_messaging_apps_title">"Things to note"</string>
+    <string name="onboarding_instant_messaging_apps_description">"This app may not work in messaging apps, as they usually bundle their custom camera implementations and they don't use the system's camera application"</string>
+    <string name="onboarding_credits_title">"Credits"</string>
+    <!-- Fuzzy -->
+    <string name="onboarding_credits_description">"This app would not be possible without the following resources and open-source libraries"</string>
     <!-- Image picker library -->
     <string name="image_picker_invalid_uri_error">"The app did not provide a file to write to"</string>
     <string name="image_picker_invalid_intent_error">"The app did not provide proper parameters"</string>
@@ -18,4 +20,11 @@
     <string name="image_picker_write_external_rationale_message">"Confirm that you allow the app to write to external storage. This permission is needed for the app to work properly"</string>
     <string name="image_picker_write_external_rationale_action_allow">"Allow"</string>
     <string name="crop_image_activity_result_error">"There has been an error while resizing the image"</string>
+    <string name="onboarding_android_11_title">"Pict2Cam with Android 11 and above"</string>
+    <string name="onboarding_android_11_description">"Pict2Cam is not compatible with Android 11 and above because the system only allows apps to take pictures with the system's camera app. 
+Check this link for details."</string>
+    <!-- https://www.reddit.com/r/androiddev/comments/ici93p/android_11_is_taking_away_the_camera_picker/ -->
+    <string name="onboarding_android_11_link_url">"https://www.reddit.com/r/androiddev/comments/ici93p/android_11_is_taking_away_the_camera_picker/"</string>
+    <string name="onboarding_android_11_link_text">"this link"</string>
+    <string name="app_help_name">"P2C Help"</string>
 </resources>
