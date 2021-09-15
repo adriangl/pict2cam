@@ -216,7 +216,7 @@ platform :android do
         download_asset_from_github_release(
           asset_url: artifact_asset_url,
           destination_path: artifact_path,
-          api_token: github_api_token
+          api_bearer: github_api_token
         )
 
         huawei_upload_result = upload_artifact_to_appgallery(
