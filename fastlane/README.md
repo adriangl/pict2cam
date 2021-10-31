@@ -16,6 +16,17 @@ or alternatively using `brew install fastlane`
 
 # Available Actions
 ## Android
+### android validate_pr
+```
+fastlane android validate_pr
+```
+Tests PRs and checks for integrity
+
+[String] app_keysafe_name: Name of the application in the keysafe
+
+[String] app_keysafe_password: Password of the application in the keysafe
+
+[String] artifact_type: Artifact to generate: APK or AAB
 ### android generate_daily_snapshot
 ```
 fastlane android generate_daily_snapshot
@@ -31,17 +42,6 @@ Generates daily snapshot and uploads it to GitHub as a pre-release
 [String] github_repository_name: GitHub repository name
 
 [String] github_api_token: GitHub API token that can publish releases
-### android validate_pr
-```
-fastlane android validate_pr
-```
-Tests PRs and checks for integrity
-
-[String] app_keysafe_name: Name of the application in the keysafe
-
-[String] app_keysafe_password: Password of the application in the keysafe
-
-[String] artifact_type: Artifact to generate: APK or AAB
 ### android promote_to_alpha
 ```
 fastlane android promote_to_alpha
@@ -70,7 +70,11 @@ Promote current stged production build to production track with 100% rollout
 
 [String] app_keysafe_password: Password of the application in the keysafe
 
-[String] artifact_type: Artifact to generate for HUAWEI AppGallery: APK or AAB
+[String] artifact_type: Artifact to upload to HUAWEI AppGallery: APK or AAB
+
+[String] github_repository_name: GitHub repository name
+
+[String] github_api_token: GitHub API token that can publish releases
 
 ----
 
