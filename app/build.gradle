@@ -60,11 +60,13 @@ ext {
      * Libraries
      ********************
      */
-    kotlin_coroutines_version = "1.5.1"
+    kotlin_coroutines_version = "1.5.2"
     espresso_version = "3.4.0"
     mockito_version = "3.11.2"
+    junit_jupiter_version = "5.8.1"
     fragment_version = "1.3.1"
-    compose_version = "1.0.0"
+    compose_version = "1.0.4"
+    accompanist_version = "0.20.0"
 }
 
 android {
@@ -201,18 +203,18 @@ dependencies {
 
     // AndroidX dependencies
     implementation "androidx.appcompat:appcompat:1.3.1"
-    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "androidx.core:core-ktx:1.7.0"
 
     // Jetpack Compose
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-util:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation "androidx.activity:activity-compose:1.3.0"
+    implementation "androidx.activity:activity-compose:1.4.0"
 
     // Accompanist
-    implementation "com.google.accompanist:accompanist-pager:0.15.0"
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.15.0"
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
 
     // Misc
     implementation "com.theartofdev.edmodo:android-image-cropper:2.8.0"
@@ -222,13 +224,13 @@ dependencies {
 
     // Testing
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testImplementation "org.mockito:mockito-core:3.12.4"
+    testImplementation "org.mockito:mockito-core:4.0.0"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 
     // Use jUnit5 in unit tests
     testImplementation "junit:junit:4.13.2"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
 
     androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
 

@@ -139,13 +139,13 @@ fun OnboardingPage(onboardingPageInfo: OnboardingPageInfo) {
 @Suppress("UndocumentedPublicFunction")
 fun OnboardingPager(onboardingPages: List<OnboardingPageInfo>,
                     onExitClick: () -> Unit = {}) {
-    val pagerState = rememberPagerState(pageCount = onboardingPages.size)
+    val pagerState = rememberPagerState(0)
     val coroutineScope = rememberCoroutineScope()
 
     fun isLastPage() = pagerState.currentPage == onboardingPages.size - 1
 
     Box(modifier = Modifier.fillMaxSize()) {
-        HorizontalPager(state = pagerState) { page ->
+        HorizontalPager(state = pagerState, count = onboardingPages.size) { page ->
             OnboardingPage(onboardingPages[page])
         }
 
