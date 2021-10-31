@@ -76,15 +76,15 @@ data class OnboardingPageInfo(val title: AnnotatedString,
 fun OnboardingPage(onboardingPageInfo: OnboardingPageInfo) {
     Column(
         modifier = Modifier
-     .fillMaxSize()
-     .background(color = onboardingPageInfo.backgroundColor)
-     .padding(16.dp)
+            .fillMaxSize()
+            .background(color = onboardingPageInfo.backgroundColor)
+            .padding(16.dp)
     ) {
         Column(
             modifier = Modifier
-         .fillMaxWidth()
-         .fillMaxHeight()
-         .weight(2f),
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .weight(2f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -108,17 +108,17 @@ fun OnboardingPage(onboardingPageInfo: OnboardingPageInfo) {
         } else if (onboardingPageInfo.content != null) {
             onboardingPageInfo.content?.invoke(
                 Modifier
-.fillMaxWidth()
-.fillMaxHeight()
-.weight(5f)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .weight(5f)
             )
         }
 
         Column(
             modifier = Modifier
-         .fillMaxWidth()
-         .fillMaxHeight()
-         .weight(3f),
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .weight(3f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -137,14 +137,15 @@ fun OnboardingPage(onboardingPageInfo: OnboardingPageInfo) {
 @Composable
 @OptIn(ExperimentalPagerApi::class)
 @Suppress("UndocumentedPublicFunction")
-fun OnboardingPager(onboardingPages: List<OnboardingPageInfo>,
+fun OnboardingPager(modifier: Modifier = Modifier,
+                    onboardingPages: List<OnboardingPageInfo>,
                     onExitClick: () -> Unit = {}) {
     val pagerState = rememberPagerState(0)
     val coroutineScope = rememberCoroutineScope()
 
     fun isLastPage() = pagerState.currentPage == onboardingPages.size - 1
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier) {
         HorizontalPager(state = pagerState, count = onboardingPages.size) { page ->
             OnboardingPage(onboardingPages[page])
         }
@@ -162,18 +163,18 @@ fun OnboardingPager(onboardingPages: List<OnboardingPageInfo>,
 
         Column(
             modifier = Modifier
-         .padding(bottom = 16.dp, end = 16.dp)
-         .clip(CircleShape)
-         .background(Color.Black.copy(alpha = 0.3f))
-         .align(Alignment.BottomEnd)
-         .clickable {
+                .padding(bottom = 16.dp, end = 16.dp)
+                .clip(CircleShape)
+                .background(Color.Black.copy(alpha = 0.3f))
+                .align(Alignment.BottomEnd)
+                .clickable {
                     if (isLastPage()) {
-                 onExitClick()
-             } else {
-                 coroutineScope.launch {
+                        onExitClick()
+                    } else {
+                        coroutineScope.launch {
                             pagerState.scrollToPage(pagerState.currentPage + 1)
                         }
-             }
+                    }
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

@@ -18,10 +18,7 @@ package com.adriangl.pict2cam.onboarding
 
 import android.os.Build
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
@@ -52,8 +49,8 @@ fun OnboardingCreditsCard(title: String,
 
     Card(
         modifier = Modifier
-       .padding(vertical = 8.dp)
-       .clickable {
+            .padding(vertical = 8.dp)
+            .clickable {
                 url?.let {
                     context.openWebsite(it)
                 }
@@ -73,6 +70,7 @@ fun OnboardingCreditsCard(title: String,
 fun OnboardingScreen(onExitClick: () -> Unit = {}) {
     Pict2CamTheme {
         OnboardingPager(
+            modifier = Modifier.fillMaxSize(),
             onboardingPages =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 // We'll display an incompatibility screen for Android 11+
@@ -95,6 +93,13 @@ fun OnboardingScreen(onExitClick: () -> Unit = {}) {
                         image = painterResource(id = R.drawable.ic_onboarding_app_logo),
                     ),
                     OnboardingPageInfo(
+                        title = stringResource(id = R.string.onboarding_instant_messaging_apps_title),
+                        description = stringResource(id = R.string.onboarding_instant_messaging_apps_description),
+                        backgroundColor =
+                        colorResource(id = R.color.onboarding_instant_messaging_apps_background_color),
+                        image = painterResource(id = R.drawable.ic_onboarding_messaging_apps)
+                    ),
+                    OnboardingPageInfo(
                         title = stringResource(id = R.string.onboarding_pick_intent_title),
                         description = stringResource(id = R.string.onboarding_pick_intent_description),
                         backgroundColor = colorResource(id = R.color.onboarding_pick_intent_background_color),
@@ -105,13 +110,6 @@ fun OnboardingScreen(onExitClick: () -> Unit = {}) {
                         description = stringResource(id = R.string.onboarding_crop_image_description),
                         backgroundColor = colorResource(id = R.color.onboarding_crop_image_background_color),
                         image = painterResource(id = R.drawable.ic_onboarding_crop_image),
-                    ),
-                    OnboardingPageInfo(
-                        title = stringResource(id = R.string.onboarding_instant_messaging_apps_title),
-                        description = stringResource(id = R.string.onboarding_instant_messaging_apps_description),
-                        backgroundColor =
-                            colorResource(id = R.color.onboarding_instant_messaging_apps_background_color),
-                        image = painterResource(id = R.drawable.ic_onboarding_messaging_apps)
                     ),
                     OnboardingPageInfo(
                         title = stringResource(id = R.string.onboarding_credits_title),
