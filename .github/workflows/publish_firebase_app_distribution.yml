@@ -58,14 +58,14 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
         
       - name: Set-up and configure JDK 11
-        uses: actions/setup-java@v2.3.1
+        uses: actions/setup-java@v2.4.0
         with:
           distribution: zulu
           java-version: 11
           cache: gradle
 
       - name: Set-up and configure Ruby
-        uses: ruby/setup-ruby@v1.84.0
+        uses: ruby/setup-ruby@v1.88.0
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
