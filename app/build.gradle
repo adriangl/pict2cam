@@ -224,7 +224,7 @@ dependencies {
 
     // Testing
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testImplementation "org.mockito:mockito-core:4.1.0"
+    testImplementation "org.mockito:mockito-core:4.5.1"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 
     // Use jUnit5 in unit tests
