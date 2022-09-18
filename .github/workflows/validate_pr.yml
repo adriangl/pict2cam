@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout PR branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install fastlane-plugin-android_build_tools deploy key
         uses: shimataro/ssh-key-action@v2.3.1
