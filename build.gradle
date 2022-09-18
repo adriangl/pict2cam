@@ -20,7 +20,7 @@ apply plugin: "com.github.ben-manes.versions"
 buildscript {
     ext {
         kotlin_version = "1.6.10" // Forced by Jetpack Compose 1.0.4
-        detekt_version = "1.19.0"
+        detekt_version = "1.21.0"
     }
 
     repositories {
