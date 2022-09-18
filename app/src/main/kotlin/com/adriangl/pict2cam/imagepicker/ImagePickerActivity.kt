@@ -155,10 +155,10 @@ class ImagePickerActivity : AppCompatActivity() {
                     R.string.image_picker_write_external_rationale_action_allow
                 ) { _, _ ->
                         ActivityCompat.requestPermissions(
-                        this@ImagePickerActivity,
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
-                    )
+                            this@ImagePickerActivity,
+                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                            WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
+                        )
                     }
                     .show()
 
