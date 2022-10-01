@@ -196,7 +196,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     // Java 8+ API desugaring support
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.2.2"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.0"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
