@@ -32,7 +32,7 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - name: Set-up and configure JDK 11
-        uses: actions/setup-java@v3.4.1
+        uses: actions/setup-java@v3.6.0
         with:
           distribution: zulu
           java-version: 11
