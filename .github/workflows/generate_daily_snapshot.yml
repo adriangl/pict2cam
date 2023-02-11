@@ -32,7 +32,7 @@ jobs:
         id: check-new-commits
         uses: adriangl/check-new-commits-action@v1.0.3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: develop
           seconds: 86400 # one day
 

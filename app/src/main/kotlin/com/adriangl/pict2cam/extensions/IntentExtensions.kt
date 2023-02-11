@@ -18,7 +18,6 @@ package com.adriangl.pict2cam.extensions
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 
 /**
@@ -34,10 +33,8 @@ fun Intent.getImageCaptureOutputUri(): Uri? {
 
     var outputUri: Uri? = null
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        clipData?.let { clipData ->
-            outputUri = clipData.getItemAt(0).uri
-        }
+    clipData?.let { clipData ->
+        outputUri = clipData.getItemAt(0).uri
     }
 
     // Compatibility for system below Lollipop, try to get the Uri by other means

@@ -7,7 +7,7 @@
     <string name="onboarding_pick_intent_description">"Abre la aplicación que necesita usar una cámara externa y elige Pict2Cam cuando te pida tomar una foto"</string>
     <string name="onboarding_crop_image_title">"Cómo usar Pict2Cam"</string>
     <string name="onboarding_crop_image_description">"Elige tu foto, recórtala… ¡Y listo!"</string>
-    <string name="onboarding_instant_messaging_apps_title">"A tener en cuenta..."</string>
+    <string name="onboarding_instant_messaging_apps_title">"A tener en cuenta…"</string>
     <string name="onboarding_instant_messaging_apps_description">"Es posible que la aplicación no funcione en aplicaciones de mensajería, ya que normalmente tienen su propia cámara integrada en la aplicación y no utilizan la aplicación de cámara por defecto del sistema"</string>
     <string name="onboarding_credits_title">"Agradecimientos"</string>
     <!-- Fuzzy -->
@@ -26,4 +26,8 @@ Entra en este enlace para más detalles."</string>
     <string name="onboarding_android_11_link_url">"https://www.reddit.com/r/androiddev/comments/ici93p/android_11_is_taking_away_the_camera_picker/"</string>
     <string name="onboarding_android_11_link_text">"este enlace"</string>
     <string name="app_help_name">"Ayuda P2C"</string>
+    <string name="onboarding_privacy_policy_title">"Política de privacidad"</string>
+    <string name="onboarding_privacy_policy_description">"Puedes consultar la política de privacidad de la aplicación en este enlace"</string>
+    <string name="onboarding_privacy_policy_link_text">"este enlace"</string>
+    <string name="onboarding_privacy_policy_link_url">"http://adriangl.com/project/pict2cam#privacy_policy"</string>
 </resources>

@@ -112,6 +112,16 @@ fun OnboardingScreen(onExitClick: () -> Unit = {}) {
                         image = painterResource(id = R.drawable.ic_onboarding_crop_image),
                     ),
                     OnboardingPageInfo(
+                        title = stringResource(id = R.string.onboarding_privacy_policy_title).toAnnotatedString(),
+                        description = linkifyResources(
+                            mainTextId = R.string.onboarding_privacy_policy_description,
+                            linkUrlId = R.string.onboarding_privacy_policy_link_url,
+                            linkTextId = R.string.onboarding_privacy_policy_link_text
+                        ),
+                        backgroundColor = colorResource(id = R.color.onboarding_privacy_policy_background_color),
+                        image = painterResource(id = R.drawable.ic_onboarding_privacy_policy),
+                    ),
+                    OnboardingPageInfo(
                         title = stringResource(id = R.string.onboarding_credits_title),
                         backgroundColor = colorResource(id = R.color.onboarding_credits_background_color),
                         content = {

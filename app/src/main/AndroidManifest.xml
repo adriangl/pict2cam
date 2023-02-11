@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright 2020 Adrián García
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +16,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.adriangl.pict2cam">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -30,14 +30,22 @@
         in Android 10 devices even if we update the targetSdkVersion.
         Hope the big guys don't send me a warning about this.
     -->
+    <!--
+        Note about backup rules: we need to set multiple flags for multiple OS versions:
+        - allowBackup and fullBackup to "false" for Android < 12
+        - dataExtractionRules to an XML file for Android >= 12
+    -->
     <application
-        android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:requestLegacyExternalStorage="true"
+        android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:requestLegacyExternalStorage="true"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:targetApi="tiramisu">
 
         <!-- Activities -->
         <activity

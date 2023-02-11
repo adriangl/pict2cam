@@ -29,6 +29,7 @@
     <color name="onboarding_pick_intent_background_color">#4FC3F7</color>
     <color name="onboarding_crop_image_background_color">#4DD0E1</color>
     <color name="onboarding_instant_messaging_apps_background_color">#4DB6AC</color>
+    <color name="onboarding_privacy_policy_background_color">#8BC34A</color>
     <color name="onboarding_credits_background_color">#FF9800</color>
     <color name="onboarding_android_11_background_color">#F44336</color>
     <color name="onboarding_credits_card_background_color">#FFCC80</color>

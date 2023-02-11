@@ -27,4 +27,8 @@ Check this link for details."</string>
     <string name="onboarding_android_11_link_url">"https://www.reddit.com/r/androiddev/comments/ici93p/android_11_is_taking_away_the_camera_picker/"</string>
     <string name="onboarding_android_11_link_text">"this link"</string>
     <string name="app_help_name">"P2C Help"</string>
+    <string name="onboarding_privacy_policy_title">"Privacy policy"</string>
+    <string name="onboarding_privacy_policy_description">"You can view the app's privacy policy at this link"</string>
+    <string name="onboarding_privacy_policy_link_text">"this link"</string>
+    <string name="onboarding_privacy_policy_link_url">"http://adriangl.com/project/pict2cam#privacy_policy"</string>
 </resources>

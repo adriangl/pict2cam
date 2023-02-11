@@ -72,40 +72,46 @@ class ImagePickerActivity : AppCompatActivity() {
         setupImagePicker()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        @Suppress("DEPRECATION")
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                PICK_IMAGE_REQUEST_CODE -> {
-                    if (data != null) {
-                        // Call cropping library
-                        openImageCropper(data.data!!, outputUri!!)
-                    } else {
-                        setResult(Activity.RESULT_CANCELED)
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                when (requestCode) {
+                    PICK_IMAGE_REQUEST_CODE -> {
+                        if (data != null) {
+                            // Call cropping library
+                            openImageCropper(data.data!!, outputUri!!)
+                        } else {
+                            setResult(Activity.RESULT_CANCELED)
+                            finish()
+                        }
+                    }
+
+                    CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                        val resultUri = CropImage.getActivityResult(data)?.uri
+
+                        if (resultUri == null) {
+                            setResult(Activity.RESULT_CANCELED)
+                        } else {
+                            setResult(Activity.RESULT_OK)
+                        }
                         finish()
                     }
                 }
-
-                CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
-                    val resultUri = CropImage.getActivityResult(data)?.uri
-
-                    if (resultUri == null) {
-                        setResult(Activity.RESULT_CANCELED)
-                    } else {
-                        setResult(Activity.RESULT_OK)
-                    }
-                    finish()
-                }
             }
-        } else if (resultCode == CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-            Toast.makeText(this, R.string.crop_image_activity_result_error, Toast.LENGTH_LONG)
-                .show()
-            setResult(Activity.RESULT_CANCELED)
-            finish()
-        } else {
-            setResult(Activity.RESULT_CANCELED)
-            finish()
+            CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE -> {
+                Toast.makeText(this, R.string.crop_image_activity_result_error, Toast.LENGTH_LONG)
+                    .show()
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
+            else -> {
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
         }
     }
 
@@ -183,6 +189,7 @@ class ImagePickerActivity : AppCompatActivity() {
             action = Intent.ACTION_GET_CONTENT
         }
 
+        @Suppress("DEPRECATION")
         startActivityForResult(
             Intent.createChooser(intent, getString(R.string.image_picker_chooser_title)),
             PICK_IMAGE_REQUEST_CODE
