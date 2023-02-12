@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - No security issues fixed!
 
+## [1.0.70] - 2023-02-11
+### Added
+- Add privacy policy page to the app Help screen
+### Changed
+- Migrate to Android 13 build tools and API target
+- Update library dependencies
+
 ## [1.0.62] - 2021-09-12
 ### Added
 - Add warning for Android 11+ with incompatibility disclaimer
@@ -49,7 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit.
 
-[Unreleased]: https://github.com/adriangl/pict2cam/compare/1.0.62...HEAD
+[Unreleased]: https://github.com/adriangl/pict2cam/compare/1.0.70...HEAD
+[1.0.70]: https://github.com/adriangl/pict2cam/compare/1.0.62...1.0.70
 [1.0.62]: https://github.com/adriangl/pict2cam/compare/1.0.53...1.0.62
 [1.0.53]: https://github.com/adriangl/pict2cam/compare/1.0.27...1.0.53
 [1.0.27]: https://github.com/adriangl/pict2cam/compare/1.0.18...1.0.27
