@@ -30,7 +30,7 @@ jobs:
 
       - name: Check if there has been new commits in the last 24 hours
         id: check-new-commits
-        uses: adriangl/check-new-commits-action@v1.0.3
+        uses: adriangl/check-new-commits-action@v1.0.6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: develop
