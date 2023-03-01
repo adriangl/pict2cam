@@ -20,7 +20,7 @@ apply plugin: "com.github.ben-manes.versions"
 buildscript {
     ext {
         kotlin_version = "1.8.10"
-        detekt_version = "1.19.0"
+        detekt_version = "1.22.0"
     }
 
     repositories {
