@@ -38,7 +38,7 @@ jobs:
 
       - name: Cancel job if no new commits have been found in the last 24 hours
         if: ${{ steps.check-new-commits.outputs.has-new-commits != 'true' }}
-        uses: andymckay/cancel-action@0.2
+        uses: andymckay/cancel-action@0.3
 
       - name: Fetch all tags
         run: git fetch origin +refs/tags/*:refs/tags/*
