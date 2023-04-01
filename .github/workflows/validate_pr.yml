@@ -39,7 +39,7 @@ jobs:
           cache: gradle
 
       - name: Set-up and configure Ruby
-        uses: ruby/setup-ruby@v1.134.0
+        uses: ruby/setup-ruby@v1.145.0
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
