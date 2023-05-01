@@ -32,7 +32,7 @@ buildscript {
     }
     
     dependencies {
-        classpath "com.android.tools.build:gradle:7.4.1"
+        classpath "com.android.tools.build:gradle:8.0.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
