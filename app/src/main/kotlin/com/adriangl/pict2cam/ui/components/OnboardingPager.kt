@@ -157,7 +157,7 @@ fun OnboardingPager(modifier: Modifier = Modifier,
                 pagerState = pagerState,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 36.dp),
+                    .padding(bottom = 36.dp)
             )
         }
 

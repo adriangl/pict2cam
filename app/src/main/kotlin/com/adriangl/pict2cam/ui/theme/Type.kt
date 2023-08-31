@@ -24,5 +24,5 @@ val openSansItalicFontFamily = FontFamily(
 )
 
 val Pict2CamTypography = Typography(
-    defaultFontFamily = openSansNormalFontFamily,
+    defaultFontFamily = openSansNormalFontFamily
 )

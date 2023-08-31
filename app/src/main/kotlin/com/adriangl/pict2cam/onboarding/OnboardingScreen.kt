@@ -90,7 +90,7 @@ fun OnboardingScreen(onExitClick: () -> Unit = {}) {
                         title = stringResource(id = R.string.onboarding_welcome_title),
                         description = stringResource(id = R.string.onboarding_welcome_description),
                         backgroundColor = colorResource(id = R.color.onboarding_welcome_background_color),
-                        image = painterResource(id = R.drawable.ic_onboarding_app_logo),
+                        image = painterResource(id = R.drawable.ic_onboarding_app_logo)
                     ),
                     OnboardingPageInfo(
                         title = stringResource(id = R.string.onboarding_instant_messaging_apps_title),
@@ -103,13 +103,13 @@ fun OnboardingScreen(onExitClick: () -> Unit = {}) {
                         title = stringResource(id = R.string.onboarding_pick_intent_title),
                         description = stringResource(id = R.string.onboarding_pick_intent_description),
                         backgroundColor = colorResource(id = R.color.onboarding_pick_intent_background_color),
-                        image = painterResource(id = R.drawable.ic_onboarding_select_image),
+                        image = painterResource(id = R.drawable.ic_onboarding_select_image)
                     ),
                     OnboardingPageInfo(
                         title = stringResource(id = R.string.onboarding_crop_image_title),
                         description = stringResource(id = R.string.onboarding_crop_image_description),
                         backgroundColor = colorResource(id = R.color.onboarding_crop_image_background_color),
-                        image = painterResource(id = R.drawable.ic_onboarding_crop_image),
+                        image = painterResource(id = R.drawable.ic_onboarding_crop_image)
                     ),
                     OnboardingPageInfo(
                         title = stringResource(id = R.string.onboarding_privacy_policy_title).toAnnotatedString(),
@@ -119,7 +119,7 @@ fun OnboardingScreen(onExitClick: () -> Unit = {}) {
                             linkTextId = R.string.onboarding_privacy_policy_link_text
                         ),
                         backgroundColor = colorResource(id = R.color.onboarding_privacy_policy_background_color),
-                        image = painterResource(id = R.drawable.ic_onboarding_privacy_policy),
+                        image = painterResource(id = R.drawable.ic_onboarding_privacy_policy)
                     ),
                     OnboardingPageInfo(
                         title = stringResource(id = R.string.onboarding_credits_title),
