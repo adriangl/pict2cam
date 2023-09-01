@@ -68,7 +68,7 @@ ext {
     compose_ui_version = "1.5.0"
     compose_material_version = "1.5.0"
     compose_compiler_version = "1.4.8"
-    accompanist_version = "0.30.1"
+    accompanist_version = "0.32.0"
 }
 
 android {
