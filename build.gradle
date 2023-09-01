@@ -39,7 +39,7 @@ buildscript {
         classpath "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
         classpath "com.gladed.androidgitversion:gradle-android-git-version:0.4.14"
         classpath "com.github.ben-manes:gradle-versions-plugin:0.47.0"
-        classpath "com.github.hyperdevs-team:poeditor-android-gradle-plugin:3.4.1"
+        classpath "com.github.hyperdevs-team:poeditor-android-gradle-plugin:3.4.2"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.9.3.0"
 
         // NOTE: Do not place your application dependencies here; they belong
