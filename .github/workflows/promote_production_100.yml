@@ -36,7 +36,7 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - name: Set-up and configure Ruby
-        uses: ruby/setup-ruby@v1.134.0
+        uses: ruby/setup-ruby@v1.154.0
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
